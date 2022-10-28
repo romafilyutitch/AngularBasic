@@ -1,0 +1,4 @@
+<button class="btn btn-primary">    
+    <span *ngIf="buttonText" class="px-5">{{buttonText | uppercase}}</span>
+    <fa-icon class="px-5" *ngIf="icon" [icon]="icon"></fa-icon>
+</button>
