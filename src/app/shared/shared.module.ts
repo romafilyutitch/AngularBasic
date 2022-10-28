@@ -1,9 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent, CourseComponent, HeaderComponent, InfoComponent, LoginComponent, RegistrationComponent } from './components';
+import { ButtonComponent, CourseCardComponent, CourseComponent, CourseListComponent, DurationPipe, HeaderComponent, InfoComponent, LoginComponent, RegistrationComponent } from './components';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-const components = [CourseComponent, LoginComponent, RegistrationComponent, HeaderComponent, ButtonComponent, InfoComponent]
+const components = [
+  CourseComponent,
+  LoginComponent, 
+  RegistrationComponent, 
+  HeaderComponent, 
+  ButtonComponent, 
+  InfoComponent,
+  CourseCardComponent,
+  DurationPipe,
+  CourseListComponent
+]
 
 @NgModule({
   declarations: components,
