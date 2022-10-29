@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Course } from 'src/app/shared/components/course.model';
 
 @Component({
@@ -32,10 +32,25 @@ export class CoursesComponent implements OnInit {
     }
   ]
   isEditable: boolean = true;
+  selectedCourse: Course;
+  modalOkButtonText: string = 'OK';
+  cancellButtonText: string = 'Cancell'
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  openModal($event: Course) {
+    this.selectedCourse = $event;
+  }
+
+  handleModalResult($event: boolean) {
+    if ($event) {
+      console.log('Modal was closed with ok button');
+    } else {
+      console.log('Modal was closed with cancel button');
+    }
   }
 
 }
