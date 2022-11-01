@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent, ConfirmModalComponent, CourseCardComponent, CourseComponent, CourseListComponent, DurationPipe, HeaderComponent, InfoComponent, LoginComponent, RegistrationComponent } from './components';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EmailValidatorDirective } from './directives/email-validator.directive';
 
 const components = [
   CourseComponent,
@@ -13,7 +14,8 @@ const components = [
   CourseCardComponent,
   DurationPipe,
   CourseListComponent,
-  ConfirmModalComponent
+  ConfirmModalComponent,
+  EmailValidatorDirective
 ]
 
 @NgModule({
