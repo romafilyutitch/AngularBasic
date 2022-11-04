@@ -6,12 +6,12 @@ import { validateEmail } from '../utils/emailValidator';
   selector: '[appEmailValidator]',
   providers: [{provide: NG_VALIDATORS, useExisting: EmailValidatorDirective, multi: true}]
 })
-export class EmailValidatorDirective implements Validator{
+export class EmailValidatorDirective implements Validator {
 
   constructor() { }
 
   validate(control: AbstractControl) : ValidationErrors | null {
-      return validateEmail(control.value);
+    return validateEmail(control.value);
   }
 
 }

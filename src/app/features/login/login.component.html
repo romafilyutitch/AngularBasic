@@ -23,11 +23,11 @@
                                 <div *ngIf="emailValue.errors?.['required']">Email is required</div>
                                 <div *ngIf="emailValue.errors?.['invalidEmail']">Email {{emailValue.errors?.['invalidEmail'].value}} is invalid</div>
                             </div>
-                            <div *ngIf="emailValue.valid" class="valid-feedback">Looks good</div>
+                            <div *ngIf="emailValue.valid && (emailValue.touched || formSubmitted)" class="valid-feedback">Looks good</div>
                         </div>
                         <div class="col-6 m-2">
                             <label for="password" class="form-label fw-bold">Password</label>
-                            <input type="text" 
+                            <input type="password" 
                             [(ngModel)]="password"
                             #passwordValue="ngModel" 
                             name="password" 
@@ -42,12 +42,12 @@
                                 <div *ngIf="passwordValue.errors?.['required']">Password is required</div>
                                 <div *ngIf="passwordValue.errors?.['minlength']">Passowrd length shoud have min 5 characters</div>
                             </div>
-                            <div *ngIf="passwordValue.valid" class="valid-feedback">Looks good</div>
+                            <div *ngIf="passwordValue.valid && (passwordValue.touched || formSubmitted)" class="valid-feedback">Looks good</div>
                         </div>
                         <div class="col-6 m-2 text-center row">
                             <input type="submit" class="btn btn-primary" value="Login">
                         </div>
-                        <div class="col-6 p-2 m-2 text-center row">
+                        <div class="col-10 p-2 m-2 text-center">
                             If you don't have any account you may <a href="#" class="text-decoration-none fw-bold text-dark">Registration</a>
                         </div>
                     </form>
