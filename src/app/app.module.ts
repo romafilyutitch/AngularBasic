@@ -5,13 +5,14 @@ import { AppComponent } from './app.component';
 import { LoginModule } from './features/login/login.module';
 import { RegistrationModule } from './features/registration/registration.module';
 import { CourseModule } from './features/course/course.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule, CoursesModule, LoginModule, RegistrationModule, CourseModule
+    BrowserModule, SharedModule, CoursesModule, LoginModule, RegistrationModule, CourseModule
   ],
   providers: [],
   bootstrap: [AppComponent]

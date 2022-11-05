@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent, ConfirmModalComponent, CourseCardComponent, CourseListComponent, DurationPipe, HeaderComponent, InfoComponent, CreationDatePipe } from './components';
+import { ButtonComponent, ConfirmModalComponent, CourseCardComponent, CourseListComponent, DurationPipe, HeaderComponent, InfoComponent, CreationDatePipe, SearchComponent } from './components';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { EmailValidatorDirective } from './directives/email-validator.directive';
+import { FormsModule } from '@angular/forms';
 
 const components = [
   HeaderComponent, 
@@ -13,14 +14,15 @@ const components = [
   CreationDatePipe,
   CourseListComponent,
   ConfirmModalComponent,
-  EmailValidatorDirective
+  EmailValidatorDirective,
+  SearchComponent
 ]
 
 @NgModule({
   declarations: components,
   exports: components,
   imports: [
-    CommonModule, FontAwesomeModule
+    CommonModule, FontAwesomeModule, FormsModule
   ]
 })
 export class SharedModule { }
