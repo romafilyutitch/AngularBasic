@@ -15,7 +15,7 @@ export class DurationPipe implements PipeTransform {
   
       return `${hoursResponse}:${minutesResponse} hours`;
     } else {
-      return '';
+      return '00:00 hours';
     }
   }
 

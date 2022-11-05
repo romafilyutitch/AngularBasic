@@ -1,1 +1,111 @@
-<p>course works!</p>
+<div class="container h-100">
+    <div class="row h-100 align-items-center justify-content-center">
+        <div class="col-10">
+            <div>
+                <div class="p-2">
+                    <h2>Course edit/create page</h2>
+                </div>
+                <div class="border shadow p-5">
+                    <form class="row justify-content-center needs-validation" (ngSubmit)="processSubmit()" [formGroup]="courseForm" novalidate>
+                        <div class="row">
+                            <p class="col-12 fw-bold h4">Main info</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="title" class="form-label fw-bold">Title</label>
+                                <input type="text"
+                                formControlName="title"
+                                [class.is-valid]="title.valid && (formSubmitted || title.touched)"
+                                [class.is-invalid]="title.invalid && (formSubmitted || title.touched)"
+                                class="form-control"
+                                id="title" 
+                                placeholder="Input text">
+                                <div *ngIf="title.invalid && (formSubmitted || title.touched)" class="invalid-feedback"> 
+                                    <div *ngIf="title.errors?.['required']">Title is required</div>
+                                </div>
+                                <div *ngIf="title.valid && (formSubmitted || title.touched)" class="valid-feedback">Looks good</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="description" class="form-label fw-bold">Description</label>
+                                <textarea type="textarea"
+                                formControlName="description"
+                                [class.is-valid]="description.valid && (formSubmitted || description.touched)"
+                                [class.is-invalid]="description.invalid && (formSubmitted || description.touched)"
+                                class="form-control" 
+                                id="description" 
+                                rows="3"
+                                placeholder="Input text"></textarea>
+                                <div *ngIf="description.invalid && (formSubmitted || description.touched)" class="invalid-feedback">
+                                    <div *ngIf="description.errors?.['required']">Description is required</div>
+                                </div>
+                                <div *ngIf="description.valid" class="valid-feedback">Looks good</div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <p class="col-12 fw-bold h4">Authors</p>
+                        </div>
+                        <div class="row" formGroupName="newAuthor">
+                            <label for="authorName" class="form-label fw-bold">Author name</label>
+                            <div class="col-10">
+                                <input type="text"
+                                formControlName="authorName"
+                                [class.is-invalid]="authorName.invalid && authorName.touched && authorName.value"
+                                [class.is-valid]="authorName.valid && authorName.touched && authorName.value"
+                                class="form-control"
+                                id="authorName"
+                                placeholder="Input text">
+                                <div *ngIf="authorName.invalid && authorName.touched" class="invalid-feedback">
+                                    <div *ngIf="authorName.errors?.['pattern']">Author name should contain only latin letters and numbers.</div>
+                                </div>
+                                <div *ngIf="authorName.valid && authorName.touched" class="valid-feedback">Looks good</div>
+                            </div>
+                            <div class="col-2">
+                                <button type="button" class="btn btn-primary" (click)="createAuthor()">Create Author</button>
+                            </div>
+                        </div>
+                        <div class="row" formGroupName="newAuthor">
+                            <div class="col-12">
+                                <p class="fw-bold">Authors list</p>
+                                <span *ngFor="let author of authors.controls; let i=index" class="col-md-auto"> 
+                                    {{author.value}} <button class="btn btn-close" (click)="removeAuthor(i)"></button>
+                                </span>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <p class="col-12 fw-bold h4">Duration</p>
+                        </div>
+                        <div class="row">
+                            <label for="duration" class="form-labeel fw-bold">Duration</label>
+                            <div class="col-10">
+                                <input type="number"
+                                formControlName="duration"
+                                [class.is-valid]="duration.valid && (formSubmitted || duration.touched)"
+                                [class.is-invalid]="duration.invalid && (formSubmitted || duration.touched)"
+                                class="form-control"
+                                id="duration"
+                                placeholder="Input text">
+                                <div *ngIf="duration.invalid && (formSubmitted || duration.touched)" class="invalid-feedback">
+                                    <div *ngIf="duration.errors?.['required']">Duration is required</div>
+                                    <div *ngIf="duration.errors?.['min']">Duration should be not less than 0</div>
+                                </div>
+                                <div *ngIf="duration.valid && (formSubmitted || duration.touched)">Looks good</div>
+                            </div>
+                            <div class="col-2 align-self-center fw-bold">
+                                {{0 | duration}}
+                            </div>
+                        </div>
+                        <div class="row justify-content-end pt-3">
+                            <button class="col-2 m-2 btn btn-primary">Cancel</button>
+                            <input type="submit" class="col-2 m-2 btn btn-primary" value="Create course">
+                        </div>
+                    </form>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+
