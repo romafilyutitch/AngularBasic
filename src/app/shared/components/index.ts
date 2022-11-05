@@ -9,3 +9,4 @@ export * from './course-card/course-card.component';
 export * from './../pipes/duration.pipe';
 export * from './course-list/course-list.component';
 export * from './confirm-modal/confirm-modal.component'
+export * from './../pipes/creation-date.pipe'
