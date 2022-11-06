@@ -1,0 +1,42 @@
+<div class="container shadow p-3 mb-5 bg-body rounded">
+    <div class="row">
+        <div class="row">
+            <div class="col fw-bold">{{title}}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-9">
+            <p>
+                {{description}}
+            </p>
+        </div>
+        <div class="col">
+            <div class="row">
+                <div class="d-flex flex-row">
+                    <div class="fw-bold">Authors:</div>
+                    <div *ngFor="let author of authors; let i=index">
+                        <span *ngIf="i === 0">{{author}}</span>
+                        <span *ngIf="i !== 0">, {{author}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="d-flex flex-row">
+                    <div class="fw-bold">Duration:</div>
+                    <div>{{duration | duration}}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="d-flex flex-row">
+                    <div class="fw-bold">Created:</div>
+                    <div>{{creationgDate | date:'dd.MM.YYYY'}}</div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="d-flex flex-row justify-content-between">
+                    <ng-content></ng-content>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

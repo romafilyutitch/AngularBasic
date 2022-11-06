@@ -1,0 +1,6 @@
+<button class="btn btn-primary" *ngIf="buttonText" data-bs-toggle="modal" data-bs-target="#staticBackdrop">    
+    <span class="px-3">{{buttonText | uppercase}}</span>
+</button>
+<button class="btn btn-primary" *ngIf="icon && !buttonText">
+    <fa-icon [icon]="icon"></fa-icon>
+</button>
