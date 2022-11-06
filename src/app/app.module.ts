@@ -6,6 +6,8 @@ import { LoginModule } from './features/login/login.module';
 import { RegistrationModule } from './features/registration/registration.module';
 import { CourseModule } from './features/course/course.module';
 import { SharedModule } from './shared/shared.module';
+import { CourseListModule } from './features/course-list/course-list.module';
+import { CourseCardModule } from './features/course-card/course-card.module';
 
 @NgModule({
   declarations: [

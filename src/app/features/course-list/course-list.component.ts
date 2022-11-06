@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Course } from '../course.model';
+import { Course } from '../../shared/components/course.model';
 
 @Component({
   selector: 'app-course-list',

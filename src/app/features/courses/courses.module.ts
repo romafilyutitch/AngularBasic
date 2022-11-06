@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CoursesComponent } from './courses.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CourseListModule } from '../course-list/course-list.module';
 
 
 @NgModule({
@@ -9,7 +10,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CoursesComponent
   ],
   imports: [
-    CommonModule, SharedModule
+    CommonModule, SharedModule, CourseListModule
   ],
   exports: [CoursesComponent]
 })
