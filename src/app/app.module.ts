@@ -6,15 +6,20 @@ import { LoginModule } from './features/login/login.module';
 import { RegistrationModule } from './features/registration/registration.module';
 import { CourseModule } from './features/course/course.module';
 import { SharedModule } from './shared/shared.module';
-import { CourseListModule } from './features/course-list/course-list.module';
-import { CourseCardModule } from './features/course-card/course-card.module';
+import { AppRoutingModule } from './routing/app-routing.module';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule, SharedModule, CoursesModule, LoginModule, RegistrationModule, CourseModule
+    BrowserModule,
+    SharedModule, 
+    CoursesModule, 
+    LoginModule, 
+    RegistrationModule, 
+    CourseModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
