@@ -1,8 +1,4 @@
-export interface User {
-    email: string;
-    name: string;
-    password: string
-}
+import { User } from "../user/user.model";
 
 export interface AuthResponse {
     successfull: boolean;

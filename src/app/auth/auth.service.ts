@@ -2,7 +2,8 @@ import { Injectable, ɵisObservable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
 import { SessionStorageService } from './session-storage.service';
 import { BehaviorSubject, catchError, first, from, Observable, throwError } from 'rxjs';
-import { AuthResponse, User } from './auth.model';
+import { AuthResponse} from './auth.model';
+import { User } from '../user/user.model';
 
 @Injectable({
   providedIn: 'root'
