@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 import { Author } from './author.model';
 import { AuthorsService } from './authors.service';
 
@@ -31,11 +31,11 @@ export class AuthorsStoreService implements OnDestroy {
 
   addAuthor(author: Author) {
     this.isLoading$$.next(true);
-    this.authorsService.addAuthor(author).subscribe(() => {
-      this.authorsService.getAll().subscribe(authors => {
-        this.isLoading$$.next(false);
-        this.authors$$.next(authors);
-      })
-    })
+    this.authorsService.addAuthor(author)
+    .pipe(switchMap(() => this.authorsService.getAll()))
+    .subscribe(authors => {
+      this.isLoading$$.next(false);
+      this.authors$$.next(authors);
+    });
   }
 }

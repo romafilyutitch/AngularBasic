@@ -7,9 +7,9 @@
     [authors]="course.authors"
     [isEditable]="isEditable"
     >
-    <app-button (click)="courseShownEvent.emit(course)" [buttonText]="courseButtonText"></app-button>
-    <app-button (click)="selectedCourse = course" *ngIf="isEditable && isUserAdmin" [icon]="removeIcon" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></app-button>
-    <app-button (click)="courseEditEvent.emit(course)" *ngIf="isEditable && isUserAdmin" [icon]="editIcon"></app-button>
+    <app-button (click)="emitCourseShowEvent(course)" [buttonText]="'Show course'"></app-button>
+    <app-button (click)="selectCourseToRemove(course)" *ngIf="isEditable" [icon]="removeIcon" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></app-button>
+    <app-button (click)="emitCourseEditEvent(course)" *ngIf="isEditable" [icon]="editIcon"></app-button>
 </app-course-card>
 </div>
 
@@ -18,6 +18,6 @@
     [message]="'Are you sure you want to remove course ' + selectedCourse.title"
     [okButtonText]="'Remove course'"
     [cancelButtonText]="'Cancel'"
-    (modalResultEvent)="processRemoveCourseChoise($event)"
+    (modalResultEvent)="emitRemoveCourseEvent($event)"
 >
 </app-confirm-modal>

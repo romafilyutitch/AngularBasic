@@ -12,11 +12,13 @@ export class AuthorsService {
   constructor(private httpClient: HttpClient, private sessionStorageService: SessionStorageService) { }
 
   getAll(): Observable<Author[]> {
-    return this.httpClient.get<AuthorResponseBody>('http://localhost:4000/authors/all').pipe(map(response => response.result));
+    return this.httpClient.get<AuthorResponseBody>('http://localhost:4000/authors/all').pipe(
+      first(),
+      map(response => response.result)
+      );
   }
 
   addAuthor(author: Author): Observable<any> {
-    const requestHeaders: HttpHeaders = new HttpHeaders().append('Authorization', this.sessionStorageService.getToken());
-    return this.httpClient.post('http://localhost:4000/authors/add', author, {headers: requestHeaders});
+    return this.httpClient.post('http://localhost:4000/authors/add', author).pipe(first());
   }
 }

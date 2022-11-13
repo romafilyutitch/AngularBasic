@@ -1,6 +1,8 @@
-<app-header>
-    <span *ngIf="isUserAuthorized" class="mx-3">{{userStoreService.name$ | async}}</span>
-    <app-button *ngIf="isUserAuthorized" (click)="processLogout()" [buttonText]="'Logout'"></app-button>
-</app-header>
+<div class="sticky-top">
+    <app-header>
+        <span *ngIf="isUserAuthorized" class="mx-3">{{userStoreService.name$ | async}}</span>
+        <app-button *ngIf="isUserAuthorized" (click)="processLogout()" [buttonText]="'Logout'"></app-button>
+    </app-header>
+</div>
 
 <router-outlet></router-outlet>

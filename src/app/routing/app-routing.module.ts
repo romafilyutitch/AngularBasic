@@ -12,7 +12,8 @@ const ROUTES: Routes = [
     {path: 'courses/:id', loadChildren: () => import('../features/show-course/show-coruse.module').then(m => m.CourseModule), canActivate: [AuthorizedGuard]},
     {path: 'course/add', loadChildren: () => import('../features/course/course.module').then(m => m.CourseModule), canActivate: [AuthorizedGuard, AdminGuard]},
     {path: 'courses/edit/:id', loadChildren: () => import('../features/course/course.module').then(m => m.CourseModule), canActivate: [AuthorizedGuard, AdminGuard]},
-    {path: '', redirectTo : '/login', pathMatch: 'full'}
+    {path: '', redirectTo : '/courses', pathMatch: 'full'},
+    {path: '**', redirectTo: '/courses', pathMatch: 'full'}
 ]
 
 @NgModule({

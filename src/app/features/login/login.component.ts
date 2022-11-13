@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { first, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
-import { UserStoreService } from 'src/app/user/services/user-store.service';
 import { User } from 'src/app/user/user.model';
 
 @Component({
@@ -9,7 +9,7 @@ import { User } from 'src/app/user/user.model';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   user: User = {
     email: '',
@@ -18,18 +18,16 @@ export class LoginComponent implements OnInit {
 
   formSubmitted: boolean = false;
   wrongData: boolean = false;
+  isAuthorizedSubscription: Subscription;
 
-  constructor(private authService: AuthService, private userStoreService: UserStoreService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-    this.authService.isAuthorized$.subscribe(isAuthorized => {
-      if (isAuthorized) {
-        this.userStoreService.getUser();
-        this.router.navigateByUrl('/courses');
-      } else if (!isAuthorized && this.formSubmitted) {
-        this.wrongData = true;
-      }
-    })
+    this.subscribeToIsAuthorized();
+  }
+
+  ngOnDestroy(): void {
+    this.isAuthorizedSubscription.unsubscribe();
   }
 
   processSubmitForm(form) : void {
@@ -37,6 +35,17 @@ export class LoginComponent implements OnInit {
     if (form.valid) {
       this.authService.login(this.user);
     }
+  }
+
+  private subscribeToIsAuthorized(): void {
+    this.isAuthorizedSubscription = this.authService.isAuthorized$
+    .subscribe(isAuthorized => {
+      if (isAuthorized) {
+        this.router.navigateByUrl('/courses');
+      } else if (!isAuthorized && this.formSubmitted) {
+        this.wrongData = true;
+      }
+    });
   }
 
 }

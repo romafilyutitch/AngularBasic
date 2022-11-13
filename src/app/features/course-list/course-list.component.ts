@@ -2,8 +2,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Course } from 'src/app/services/course.model';
-import { UserStoreService } from 'src/app/user/services/user-store.service';
-import { UserService } from 'src/app/user/services/user.service';
 
 @Component({
   selector: 'app-course-list',
@@ -14,28 +12,35 @@ export class CourseListComponent implements OnInit {
 
   @Input() courses: Course[];
   @Input() isEditable: boolean;
-  @Output() courseShownEvent: EventEmitter<Course> = new EventEmitter<Course>();
-  @Output() courseEditEvent: EventEmitter<Course> = new EventEmitter<Course>();
-  @Output() courseRemoveEvent: EventEmitter<Course> = new EventEmitter<Course>();
+  @Output() private courseShownEvent: EventEmitter<Course> = new EventEmitter<Course>();
+  @Output() private courseEditEvent: EventEmitter<Course> = new EventEmitter<Course>();
+  @Output() private courseRemoveEvent: EventEmitter<Course> = new EventEmitter<Course>();
+
   selectedCourse: Course;
-
-  courseButtonText: string = 'Show Course';
-
   editIcon: IconDefinition = faPencil;
   removeIcon: IconDefinition = faTrash;
-  isUserAdmin: boolean = false;
   
-  constructor(private userStorageService: UserStoreService) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.userStorageService.isAdmin$.subscribe(isAdmin => {
-      this.isUserAdmin = isAdmin;
-    });
   }
 
-  processRemoveCourseChoise(removeCourse: boolean): void {
+  emitRemoveCourseEvent(removeCourse: boolean): void {
     if (removeCourse) {
       this.courseRemoveEvent.emit(this.selectedCourse);
     }
   }
+
+  emitCourseShowEvent(course: Course): void {
+    this.courseShownEvent.emit(course);
+  }
+
+  emitCourseEditEvent(course: Course): void {
+    this.courseEditEvent.emit(course);
+  }
+
+  selectCourseToRemove(course: Course): void {
+    this.selectedCourse = course;
+  }
+
 }

@@ -1,6 +1,6 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { AuthorsStoreService } from './authors-store.service';
+import { Author } from './author.model';
 import { AuthorsService } from './authors.service';
 import { Course } from './course.model';
 import { CoursesService } from './courses.service';
@@ -27,7 +27,7 @@ export class CoursesStoreService implements OnDestroy {
     this.isLoading$$.next(true);
     combineLatest([this.coursesService.getAll(), this.authorsService.getAll()])
     .subscribe(([courses, authors]) => {
-      courses.forEach(course => course.authors = authors.filter(author => course.authors.includes(author.id)).map(author => author.name));
+      this.mergeCoursesWithAuthors(courses, authors);
       this.isLoading$$.next(false);
       this.courses$$.next(courses);
     })
@@ -37,7 +37,7 @@ export class CoursesStoreService implements OnDestroy {
     this.isLoading$$.next(true);
     combineLatest([this.coursesService.getCourse(id), this.authorsService.getAll()])
     .subscribe(([course, authors]) => {
-      course.authors = authors.filter(author => course.authors.includes(author.id)).map(author => author.name);
+      this.mergeCoursesWithAuthors([course], authors);
       this.isLoading$$.next(false);
       this.courses$$.next([course]);
     })
@@ -48,14 +48,14 @@ export class CoursesStoreService implements OnDestroy {
     if (title) {
       combineLatest([this.coursesService.searchCourse(title), this.authorsService.getAll()])
       .subscribe(([courses, authors]) => {
-        courses.forEach(course => course.authors = authors.filter(author => course.authors.includes(author.id)).map(author => author.name));
+        this.mergeCoursesWithAuthors(courses, authors);
         this.isLoading$$.next(false);
         this.courses$$.next(courses);
       })
     } else {
       combineLatest([this.coursesService.getAll(), this.authorsService.getAll()])
       .subscribe(([courses, authors]) => {
-        courses.forEach(course => course.authors = authors.filter(author => course.authors.includes(author.id)).map(author => author.name));
+        this.mergeCoursesWithAuthors(courses, authors);
         this.isLoading$$.next(false);
         this.courses$$.next(courses);
       })
@@ -81,5 +81,9 @@ export class CoursesStoreService implements OnDestroy {
     this.coursesService.deleteCourse(course).subscribe(() => {
       this.isLoading$$.next(false);
     });
+  }
+
+  private mergeCoursesWithAuthors(courses: Course[], authors: Author[]): void {
+    courses.forEach(course => course.authors = authors.filter(author => course.authors.includes(author.id)).map(author => author.name));
   }
 }

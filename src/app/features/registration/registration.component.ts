@@ -28,14 +28,6 @@ export class RegistrationComponent implements OnInit {
     }); 
   }
 
-  processSubmit(): void {
-    this.formSubmitted = true;
-    if(this.registrationForm.valid) {
-      this.authService.register(this.registrationForm.value);
-      this.router.navigateByUrl('/login');
-    }
-  }
-
   get name() {
     return this.registrationForm.get('name');
   }
@@ -46,6 +38,14 @@ export class RegistrationComponent implements OnInit {
 
   get password() {
     return this.registrationForm.get('password');
+  }
+
+  processSubmit(): void {
+    this.formSubmitted = true;
+    if(this.registrationForm.valid) {
+      this.authService.register(this.registrationForm.value);
+      this.router.navigateByUrl('/login');
+    }
   }
 
 }

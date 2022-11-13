@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs';
+import { first, map } from 'rxjs';
 import { Course } from 'src/app/services/course.model';
 import { CoursesStoreService } from 'src/app/services/courses-store.service';
 
@@ -18,10 +18,15 @@ export class ShowCourseComponent implements OnInit {
   ngOnInit(): void {
     const courseId: string = this.activatedRoute.snapshot.paramMap.get('id');
     this.coursesStoreService.getCourse(courseId);
+    this.subscribeToCourse();
+  }
+
+  private subscribeToCourse(): void {
+    const courseId: string = this.activatedRoute.snapshot.paramMap.get('id');
     this.coursesStoreService.courses$
-    .pipe(map(courses => courses[0]))
-    .subscribe(course => {
-      this.selectedCourse = course;
+    .pipe(first())
+    .subscribe(courses => {
+      this.selectedCourse = courses.find(course => course.id === courseId);
     })
   }
 
