@@ -1,19 +1,31 @@
 
+<app-search (searchInitiated)="serachCourses($event)" [searchPlaceholder]="'Input text'"></app-search>
 
-<app-search [searchPlaceholder]="'Input text'"></app-search>
-
-<app-course-list 
+<app-course-list *ngIf="courses.length"
     [isEditable]="isEditable"
     [courses]="courses"
-    (courseShownEvent)="openModal($event)"
+    (courseRemoveEvent)="removeCourse($event)"
+    (courseEditEvent)="editCourse($event)"
+    (courseShownEvent)="showCourse($event)"
 ></app-course-list>
 
-<app-confirm-modal *ngIf="selectedCourse"
-    [title]="selectedCourse.title"
-    [message]="selectedCourse.description"
-    [okButtonText]="modalOkButtonText"
-    [cancelButtonText]="cancellButtonText"
-    (modalResultEvent)="handleModalResult($event)"
->
-</app-confirm-modal>
+<div class="container">
+    <div class="row h-100 align-items-center justify-content-center">
+        <div class="col-6">
+            <div class="text-center">
+                <div *ngIf="!courses.length" class="p-2 mb-4">
+                    <h2>Your list is empty</h2>
+                </div>
+                <div *ngIf="!courses.length" class="p-2">
+                    Please use 'Add New Course' button to add your first course
+                </div>
+                <div *ngIf="isUserAdmin" class="p-2">
+                    <app-button [buttonText]="'Add new course'" [routerLink]="['/', 'course', 'add']"></app-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 

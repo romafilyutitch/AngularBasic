@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Author } from './author.model';
 import { AuthorsService } from './authors.service';
@@ -6,20 +6,15 @@ import { AuthorsService } from './authors.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthorsStoreService implements OnInit, OnDestroy {
+export class AuthorsStoreService implements OnDestroy {
 
   private isLoading$$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   private authors$$: BehaviorSubject<Author[]> = new BehaviorSubject([]);
 
-  public isLoading$: Observable<boolean>;
-  public authors$: Observable<Author[]>;
+  public isLoading$: Observable<boolean> = this.isLoading$$.asObservable();
+  public authors$: Observable<Author[]> = this.authors$$.asObservable();
 
   constructor(private authorsService: AuthorsService) { }
-
-  ngOnInit(): void {
-      this.isLoading$ = this.isLoading$$.asObservable();
-      this.authors$ = this.authors$$.asObservable();
-  }
 
   ngOnDestroy(): void {
       this.isLoading$$.complete();
@@ -37,7 +32,10 @@ export class AuthorsStoreService implements OnInit, OnDestroy {
   addAuthor(author: Author) {
     this.isLoading$$.next(true);
     this.authorsService.addAuthor(author).subscribe(() => {
-      this.isLoading$$.next(false);
+      this.authorsService.getAll().subscribe(authors => {
+        this.isLoading$$.next(false);
+        this.authors$$.next(authors);
+      })
     })
   }
 }

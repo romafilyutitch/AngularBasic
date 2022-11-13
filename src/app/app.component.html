@@ -1,6 +1,6 @@
 <app-header>
-    <span class="mx-3">Harry potter</span>
-    <app-button [buttonText]="'Logout'"></app-button>
+    <span *ngIf="isUserAuthorized" class="mx-3">{{userStoreService.name$ | async}}</span>
+    <app-button *ngIf="isUserAuthorized" (click)="processLogout()" [buttonText]="'Logout'"></app-button>
 </app-header>
 
 <router-outlet></router-outlet>

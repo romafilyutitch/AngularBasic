@@ -1,5 +1,8 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Course } from 'src/app/shared/components/course.model';
+import { Router } from '@angular/router';
+import { Course } from 'src/app/services/course.model';
+import { CoursesStoreService } from 'src/app/services/courses-store.service';
+import { UserStoreService } from 'src/app/user/services/user-store.service';
 
 @Component({
   selector: 'app-courses',
@@ -8,49 +11,40 @@ import { Course } from 'src/app/shared/components/course.model';
 })
 export class CoursesComponent implements OnInit {
 
-  courses: Course[] = [
-    {
-      title: 'Angular',
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuris, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheet containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
-      creationDate: new Date(Date.UTC(2012, 2, 20)),
-      duration: 150,
-      authors: ['Dave Heisenberg', 'Tony Ja']
-    },
-    {
-      title: 'Java',
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuris, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheet containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
-      creationDate: new Date(Date.UTC(2017, 7, 14)),
-      duration: 60,
-      authors: ['Dave Simonnds', 'Valentina Lary']
-    },
-    {
-      title: 'ASP. NET',
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuris, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheet containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
-      creationDate: new Date(Date.UTC(2022, 5, 1)),
-      duration: 210,
-      authors: ['Sam Smith', 'Tony Robbins']
-    }
-  ]
+  courses: Course[];
   isEditable: boolean = true;
-  selectedCourse: Course;
   modalOkButtonText: string = 'OK';
-  cancellButtonText: string = 'Cancell'
+  cancellButtonText: string = 'Cancell';
+  isUserAdmin: boolean;
 
-  constructor() { }
+  constructor(private coursesStoreService: CoursesStoreService,
+              private router: Router,
+              private userStoreService: UserStoreService) { }
 
   ngOnInit(): void {
+    this.coursesStoreService.getAll();
+    this.coursesStoreService.courses$.subscribe(course => {
+      this.courses = course;
+    });
+    this.userStoreService.isAdmin$.subscribe(isAdmin => {
+      this.isUserAdmin = isAdmin;
+    })
   }
 
-  openModal($event: Course) {
-    this.selectedCourse = $event;
+  serachCourses(title: string): void {
+    this.coursesStoreService.searchCourse(title);
   }
 
-  handleModalResult($event: boolean) {
-    if ($event) {
-      console.log('Modal was closed with ok button');
-    } else {
-      console.log('Modal was closed with cancel button');
-    }
+  removeCourse(courseToRemove: Course): void {
+    this.courses = this.courses.filter(course => course !== courseToRemove)
+    this.coursesStoreService.deleteCourse(courseToRemove);
   }
 
+  editCourse(courseToEdit: Course): void {
+    this.router.navigate(['/', 'courses', 'edit', courseToEdit.id]);
+  }
+
+  showCourse(courseToShow: Course): void {
+    this.router.navigate(['/', 'courses', courseToShow.id]);
+  }
 }

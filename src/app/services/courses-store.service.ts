@@ -1,25 +1,22 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { AuthorsStoreService } from './authors-store.service';
+import { AuthorsService } from './authors.service';
 import { Course } from './course.model';
 import { CoursesService } from './courses.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CoursesStoreService implements OnInit, OnDestroy {
+export class CoursesStoreService implements OnDestroy {
 
   private isLoading$$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private courses$$: BehaviorSubject<Course[]> = new BehaviorSubject<Course[]>([]);
 
-  public isLoading$: Observable<boolean>;
-  public courses$: Observable<Course[]>;
+  public isLoading$: Observable<boolean> = this.isLoading$$.asObservable();
+  public courses$: Observable<Course[]> = this.courses$$.asObservable();
 
-  constructor(private coursesService: CoursesService) { }
-
-  ngOnInit(): void {
-      this.isLoading$ = this.isLoading$$.asObservable();
-      this.courses$ = this.courses$$.asObservable();
-  }
+  constructor(private coursesService: CoursesService, private authorsService: AuthorsService) { }
 
   ngOnDestroy(): void {
       this.isLoading$$.complete();
@@ -28,18 +25,41 @@ export class CoursesStoreService implements OnInit, OnDestroy {
 
   getAll() {
     this.isLoading$$.next(true);
-    this.coursesService.getAll().subscribe(courses => {
-      this.courses$$.next(courses);
+    combineLatest([this.coursesService.getAll(), this.authorsService.getAll()])
+    .subscribe(([courses, authors]) => {
+      courses.forEach(course => course.authors = authors.filter(author => course.authors.includes(author.id)).map(author => author.name));
       this.isLoading$$.next(false);
-    });
+      this.courses$$.next(courses);
+    })
   }
 
   getCourse(id: string) {
     this.isLoading$$.next(true);
-    this.coursesService.getCourse(id).subscribe(course => {
+    combineLatest([this.coursesService.getCourse(id), this.authorsService.getAll()])
+    .subscribe(([course, authors]) => {
+      course.authors = authors.filter(author => course.authors.includes(author.id)).map(author => author.name);
       this.isLoading$$.next(false);
-      this.courses$$.next([course])
-    });
+      this.courses$$.next([course]);
+    })
+  }
+
+  searchCourse(title: string): void {
+    this.isLoading$$.next(true);
+    if (title) {
+      combineLatest([this.coursesService.searchCourse(title), this.authorsService.getAll()])
+      .subscribe(([courses, authors]) => {
+        courses.forEach(course => course.authors = authors.filter(author => course.authors.includes(author.id)).map(author => author.name));
+        this.isLoading$$.next(false);
+        this.courses$$.next(courses);
+      })
+    } else {
+      combineLatest([this.coursesService.getAll(), this.authorsService.getAll()])
+      .subscribe(([courses, authors]) => {
+        courses.forEach(course => course.authors = authors.filter(author => course.authors.includes(author.id)).map(author => author.name));
+        this.isLoading$$.next(false);
+        this.courses$$.next(courses);
+      })
+    }
   }
 
   createCourse(course: Course) {

@@ -11,8 +11,8 @@
           {{message}}
         </div>
         <div class="modal-footer">
-            <app-button (click)="okayModal()" [buttonText]="okButtonText"></app-button>
-            <app-button (click)="cancelModal()" [buttonText]="cancelButtonText"></app-button>
+            <app-button (click)="okayModal()" [buttonText]="okButtonText" data-bs-dismiss="modal"></app-button>
+            <app-button (click)="cancelModal()" [buttonText]="cancelButtonText" data-bs-dismiss="modal"></app-button>
         </div>
       </div>
     </div>

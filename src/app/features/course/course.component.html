@@ -95,12 +95,12 @@
                                 <div *ngIf="duration.valid && (formSubmitted || duration.touched)">Looks good</div>
                             </div>
                             <div class="col-2 align-self-center fw-bold">
-                                {{0 | duration}}
+                                {{duration.value | duration}}
                             </div>
                         </div>
                         <div class="row justify-content-end pt-3">
-                            <button class="col-2 m-2 btn btn-primary">Cancel</button>
-                            <input type="submit" class="col-2 m-2 btn btn-primary" value="Create course">
+                            <button class="col-2 m-2 btn btn-primary" [routerLink]="['/', 'courses']">Cancel</button>
+                            <input type="submit" class="col-2 m-2 btn btn-primary" [value]="activatedRoute.snapshot.paramMap.get('id') ? 'Edit Course' : 'Create course'">
                         </div>
                     </form>
                 </div>
