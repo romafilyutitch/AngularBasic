@@ -1,1 +1,69 @@
-<p>registration works!</p>
+<div class="container h-100">
+    <div class="row h-100 align-items-center justify-content-center">
+        <div class="col-6">
+            <div>
+                <div class="p-2 mb-4 text-center">
+                    <h2>Registraion</h2>
+                </div>
+                <div class="border shadow p-5">
+                    <form class="row justify-content-center needs-validation" (ngSubmit)="processSubmit()" [formGroup]="registrationForm" novalidate>
+                        <div class="col-6 m-2">
+                            <label for="name" class="form-label fw-bold">Name</label>
+                            <input type="text"
+                            formControlName="name"
+                            [class.is-valid]="name.valid && (formSubmitted || name.touched)"
+                            [class.is-invalid]="name.invalid && (formSubmitted || name.touched)"
+                            class="form-control" 
+                            id="name" 
+                            placeholder="Input text">
+                            <div *ngIf="name.invalid && (formSubmitted || name.touched)" class="invalid-feedback">
+                                <div *ngIf="name.errors?.['required']">Name is required</div>
+                                <div *ngIf="name.errors?.['minlength']">Name should not be less than 6 symbols</div>
+                            </div>
+                            <div *ngIf="name.valid && (formSubmitted || name.touched)" class="valid-feedback">Looks good</div>
+                        </div>
+                        <div class="col-6 m-2">
+                            <label for="email" class="form-label fw-bold">Email</label>
+                            <input type="text"
+                            [class.is-valid]="email.valid && (formSubmitted || email.touched)"
+                            [class.is-invalid]="email.invalid && (formSubmitted || email.touched)"
+                            formControlName="email" 
+                            name="email" 
+                            class="form-control" 
+                            id="email" 
+                            placeholder="Input text">
+                            <div *ngIf="email.invalid && (formSubmitted || email.touched)" class="invalid-feedback">
+                                <div *ngIf="email.errors?.['required']">Email is required</div>
+                                <div *ngIf="email.errors?.['invalidEmail']">Email {{email.value}} is invalid</div>
+                            </div>
+                            <div *ngIf="email.valid && (formSubmitted || email.touched)" class="valid-feedback">Looks good</div>
+                        </div>
+                        <div class="col-6 m-2">
+                            <label for="password" class="form-label fw-bold">Password</label>
+                            <input type="password"
+                            formControlName="password"
+                            name="password"
+                            [class.is-valid]="password.valid && (formSubmitted || password.touched)"
+                            [class.is-invalid]="password.invalid && (formSubmitted || password.touched)"
+                            class="form-control"
+                            id="password"
+                            placeholder="Input text">
+                            <div *ngIf="password.invalid && (formSubmitted || password.touched)" class="invalid-feedback">
+                                <div *ngIf="password.errors?.['required']">Password is required</div>
+                                <div *ngIf="password.errors?.['minlength']">Password should not be less than 5 symbols</div>
+                            </div>
+                            <div *ngIf="password.valid && (formSubmitted || password.touched)" class="valid-feedback">Looks good</div>
+                        </div>
+                        <div class="col-6 m-2 text-center row">
+                            <input type="submit" class="btn btn-primary" value="Login">
+                        </div>
+                        <div class="col-10 p-2 m-2 text-center">
+                            If you have an account you may <a href="#" class="text-decoration-none fw-bold text-dark">Login</a>
+                        </div>
+                    </form>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+

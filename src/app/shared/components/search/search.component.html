@@ -1,0 +1,20 @@
+<div class="container p-4">
+    <form (submit)="processSubmit()">
+        <div class="row">
+            <div class="col-10">
+                <input
+                [(ngModel)]="searchValue"
+                name="serachValue"
+                type="text"
+                class="form-control"
+                [placeholder]="searchPlaceholder">
+            </div>
+            <div class="col-2">
+                <input 
+                type="submit"
+                value="SEARCH"
+                class="form-control btn btn-primary">
+            </div>
+        </div>
+    </form>
+</div>

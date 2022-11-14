@@ -1,26 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent, ConfirmModalComponent, CourseCardComponent, CourseComponent, CourseListComponent, DurationPipe, HeaderComponent, InfoComponent, LoginComponent, RegistrationComponent } from './components';
+import { ButtonComponent, ConfirmModalComponent, HeaderComponent, InfoComponent, SearchComponent } from './components';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EmailValidatorDirective } from './directives/email-validator.directive';
+import { FormsModule } from '@angular/forms';
+import { PasswordToggleDirective } from './directives/password-toggle.directive';
+import { CreationDatePipe } from './pipes/creation-date.pipe';
+import { DurationPipe } from './pipes/duration.pipe';
 
-const components = [
-  CourseComponent,
-  LoginComponent, 
-  RegistrationComponent, 
+const COMPONENTS = [
   HeaderComponent, 
   ButtonComponent, 
   InfoComponent,
-  CourseCardComponent,
-  DurationPipe,
-  CourseListComponent,
-  ConfirmModalComponent
+  ConfirmModalComponent,
+  SearchComponent, 
 ]
 
 @NgModule({
-  declarations: components,
-  exports: components,
+  declarations: [...COMPONENTS, DurationPipe, CreationDatePipe, EmailValidatorDirective, PasswordToggleDirective],
+  exports: [...COMPONENTS, DurationPipe, CreationDatePipe, EmailValidatorDirective, PasswordToggleDirective],
   imports: [
-    CommonModule, FontAwesomeModule
+    CommonModule, FontAwesomeModule, FormsModule
   ]
 })
 export class SharedModule { }

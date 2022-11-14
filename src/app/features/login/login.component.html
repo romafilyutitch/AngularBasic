@@ -1,1 +1,65 @@
-<p>login works!</p>
+<div class="container h-100">
+    <div class="row h-100 align-items-center justify-content-center">
+        <div class="col-6">
+            <div>
+                <div class="p-2 mb-4 text-center">
+                    <h2>Login</h2>
+                </div>
+                <div class="border shadow p-5">
+                    <form class="row justify-content-center needs-validation" (ngSubmit)="processSubmitForm()" #loginForm="ngForm" novalidate>
+                        <div class="col-6 m-2">
+                            <label for="email" class="form-label fw-bold">Email</label>
+                            <input type="text" 
+                            [(ngModel)]="email" 
+                            name="email" 
+                            #emailValue="ngModel" 
+                            class="form-control" 
+                            [class.is-invalid]="emailValue.invalid && (emailValue.touched || formSubmitted)" 
+                            [class.is-valid]="emailValue.valid && (emailValue.touched || formSubmitted)" 
+                            id="email" 
+                            placeholder="Input text" 
+                            required appEmailValidator>
+                            <div *ngIf="emailValue.invalid && (emailValue.touched || formSubmitted)" class="invalid-feedback">
+                                <div *ngIf="emailValue.errors?.['required']">Email is required</div>
+                                <div *ngIf="emailValue.errors?.['invalidEmail']">Email {{emailValue.errors?.['invalidEmail'].value}} is invalid</div>
+                            </div>
+                            <div *ngIf="emailValue.valid && (emailValue.touched || formSubmitted)" class="valid-feedback">Looks good</div>
+                        </div>
+                        <div class="col-6 m-2">
+                            <label for="password" class="form-label fw-bold">Password</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" (click)="passwordToggle.togglePassword()">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Show password</label>
+                              </div>
+                            <input [type]="passwordToggle.showPassword ? 'text' : 'password'" 
+                            [(ngModel)]="password"
+                            appPasswordToggle
+                            #passwordToggle="passwordToggle"
+                            #passwordValue="ngModel" 
+                            name="password" 
+                            class="form-control" 
+                            [class.is-invalid]="passwordValue.invalid && (passwordValue.touched || formSubmitted)"
+                            [class.is-valid]="passwordValue.valid && (passwordValue.touched || formSubmitted)"
+                            id="password" 
+                            placeholder="Input text" 
+                            required 
+                            minlength="5">
+                            <div *ngIf="passwordValue.invalid && (passwordValue.touched || formSubmitted)" class="invalid-feedback">
+                                <div *ngIf="passwordValue.errors?.['required']">Password is required</div>
+                                <div *ngIf="passwordValue.errors?.['minlength']">Passowrd length shoud have min 5 characters</div>
+                            </div>
+                            <div *ngIf="passwordValue.valid && (passwordValue.touched || formSubmitted)" class="valid-feedback">Looks good</div>
+                        </div>
+                        <div class="col-6 m-2 text-center row">
+                            <input type="submit" class="btn btn-primary" value="Login">
+                        </div>
+                        <div class="col-10 p-2 m-2 text-center">
+                            If you don't have any account you may <a href="#" class="text-decoration-none fw-bold text-dark">Registration</a>
+                        </div>
+                    </form>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+
