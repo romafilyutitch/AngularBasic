@@ -3,7 +3,12 @@ export interface Author {
     id?: string;
 }
 
-export interface AuthorResponseBody {
+export interface AuthorsResponseBody {
     success: boolean;
     result: Author[];
+}
+
+export interface AuthorResponseBody {
+    success: boolean;
+    result: Author;
 }

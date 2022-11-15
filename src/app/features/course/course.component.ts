@@ -67,17 +67,13 @@ export class CourseComponent implements OnInit, OnDestroy {
   processSubmit(): void {
     this.formSubmitted = true;
     if (this.courseForm.valid) {
-      this.authorsStorageService.authors$
-      .pipe(first())
-      .subscribe(authors => {
-        const requestBody: Course = this.buildRequestBody(authors);
+        const requestBody: Course = this.buildRequestBody();
         if(this.shouldFormEditCourse()) {
           this.coursesStorageSerivce.editCourse(requestBody);
         } else {
           this.coursesStorageSerivce.createCourse(requestBody);
         }
         this.router.navigateByUrl('/courses');
-      })
     }
   }
 
@@ -90,7 +86,6 @@ export class CourseComponent implements OnInit, OnDestroy {
         authorName, []
       ));
       authorNameControl.reset();
-      this.authorsStorageService.addAuthor({name: authorName});
     }
   }
 
@@ -143,15 +138,13 @@ export class CourseComponent implements OnInit, OnDestroy {
     });
   }
 
-  private buildRequestBody(availableAuthors: Author[]): Course {
+  private buildRequestBody(): Course {
     const authorsNames: string[] = this.courseForm.get('newAuthor').get('authors').value;
-    const createdAuthors: Author[] = [];
-    authorsNames.forEach(authorName => createdAuthors.push(availableAuthors.find(author => author.name === authorName)));
     const requestBody: Course = {
       id: this.activatedRoute.snapshot.paramMap.get('id'),
       title: this.courseForm.get('title').value,
       description: this.courseForm.get('description').value,
-      authors: createdAuthors.map(author => author.id),
+      authors: authorsNames,
       duration: this.courseForm.get('duration').value
     };
     return requestBody;

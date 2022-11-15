@@ -31,11 +31,8 @@ export class AuthorsStoreService implements OnDestroy {
 
   addAuthor(author: Author) {
     this.isLoading$$.next(true);
-    this.authorsService.addAuthor(author)
-    .pipe(switchMap(() => this.authorsService.getAll()))
-    .subscribe(authors => {
+    this.authorsService.addAuthor(author).subscribe(() => {
       this.isLoading$$.next(false);
-      this.authors$$.next(authors);
-    });
+    })
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { Author } from './author.model';
+import { BehaviorSubject, combineLatest, combineLatestAll, concat, forkJoin, merge, mergeMap, Observable } from 'rxjs';
+import { Author, AuthorResponseBody } from './author.model';
 import { AuthorsService } from './authors.service';
 import { Course } from './course.model';
 import { CoursesService } from './courses.service';
@@ -64,16 +64,52 @@ export class CoursesStoreService implements OnDestroy {
 
   createCourse(course: Course) {
     this.isLoading$$.next(true);
-    this.coursesService.createCourse(course).subscribe(() => {
-      this.isLoading$$.next(false);
-    });
+    if (course.authors.length) {
+      const courseAuthorsIDs: string[] = [];
+      const courseAuthors: Observable<Author>[] = course.authors.map(author => this.authorsService.addAuthor({name: author}));
+      concat(...courseAuthors).subscribe({
+        next: author => {
+          courseAuthorsIDs.push(author.id);
+        },
+        complete: () => {
+          course.authors = courseAuthorsIDs;
+          this.coursesService.createCourse(course).subscribe(() => {
+            this.isLoading$$.next(false);
+            this.getAll();
+          });
+        }
+      });
+    } else {
+      this.coursesService.createCourse(course).subscribe(() => {
+        this.isLoading$$.next(false);
+        this.getAll();
+      });
+    }
   }
 
   editCourse(course: Course) {
     this.isLoading$$.next(true);
-    this.coursesService.editCourse(course).subscribe(() => {
-      this.isLoading$$.next(false);
-    });
+    if (course.authors.length) {
+      const courseAuthorsIDs: string[] = [];
+      const courseAuthors: Observable<Author>[] = course.authors.map(author => this.authorsService.addAuthor({name: author}));
+      concat(...courseAuthors).subscribe({
+        next: author => {
+          courseAuthorsIDs.push(author.id);
+        },
+        complete: () => {
+          course.authors = courseAuthorsIDs;
+          this.coursesService.editCourse(course).subscribe(() => {
+            this.isLoading$$.next(false);
+            this.getAll();
+          });
+        }
+      });
+    } else {
+      this.coursesService.editCourse(course).subscribe(() => {
+        this.isLoading$$.next(false);
+        this.getAll();
+      });
+    }
   }
 
   deleteCourse(course: Course) {
