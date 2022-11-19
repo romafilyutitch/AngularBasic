@@ -36,12 +36,12 @@ export class CoursesService {
       );
   }
 
-  createCourse(course: Course): Observable<any> {
-    return this.httpClient.post('http://localhost:4000/courses/add', course).pipe(first());
+  createCourse(course: Course): Observable<Course> {
+    return this.httpClient.post<CourseResponse>('http://localhost:4000/courses/add', course).pipe(first(), map(response => response.result));
   }
 
-  editCourse(course: Course): Observable<any> {
-    return this.httpClient.put(`http://localhost:4000/courses/${course.id}`, course).pipe(first());
+  editCourse(course: Course): Observable<Course> {
+    return this.httpClient.put<CourseResponse>(`http://localhost:4000/courses/${course.id}`, course).pipe(first(), map(response => response.result));
   }
 
   deleteCourse(course: Course): Observable<any> {
