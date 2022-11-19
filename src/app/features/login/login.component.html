@@ -53,8 +53,8 @@
                         <div class="col-6 m-2 text-center row">
                             <input type="submit" class="btn btn-primary" value="Login">
                         </div>
-                        <div *ngIf="wrongData" class="col-6 m-2 text-center text-danger">
-                            Wrong email or password provided. Please provide right email and password
+                        <div *ngIf="errorMessage" class="col-6 m-2 text-center text-danger">
+                            {{errorMessage}}
                         </div>
                         <div class="col-10 p-2 m-2 text-center">
                             If you don't have any account you may <a [routerLink]="['/', 'registration']" class="text-decoration-none fw-bold text-dark">Registration</a>

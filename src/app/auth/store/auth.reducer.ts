@@ -21,17 +21,22 @@ export const reducer = createReducer(
     on(requestLogin, state => state),
     on(requestLoginSuccess, (state, action) => ({
         ...state,
-        token: action.token
+        token: action.token,
+        isAuthorized: true
     })),
     on(requestLoginFail, (state, action) => ({
         ...state,
+        isAuthorized: false,
         errorMessage: action.errorMessage
     })),
     on(requestRegister, state => state),
     on(requestRegisterSuccess, state => state),
     on(requestRegisterFail, state => state),
     on(requestLogout, state => state),
-    on(requestLogoutSuccess, state => state)
+    on(requestLogoutSuccess, state => ({
+        ...state,
+        isAuthorized: false
+    }))
 )
 
 export const authReducer = (state: AuthState, action: Action) => reducer(state, action);

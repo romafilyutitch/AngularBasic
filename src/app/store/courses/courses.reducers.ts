@@ -1,6 +1,6 @@
 import { Course } from "src/app/services/course.model";
-import { createReducer, on } from "@ngrx/store";
-import { requestAllCourses, requestAllCoursesFail, requestAllCoursesSuccess, requestCreateCourse, requestCreateCourseFail, requestCreateCourseSuccess, requestDeleteCourse, requestDeleteCourseFail, requestEditCoruseSuccess, requestEditCourse, requestEditCourseFail, requestFilteredCourses, requestFilteredCoursesFail, requestFilteredCoursesSuccess, requestSingleCourse, requestSingleCourseFail, requestSingleCourseSuccess } from "./courses.actions";
+import { Action, createReducer, on } from "@ngrx/store";
+import { requestAllCourses, requestAllCoursesFail, requestAllCoursesSuccess, requestCreateCourse, requestCreateCourseFail, requestCreateCourseSuccess, requestDeleteCourse, requestDeleteCourseFail, requestEditCourse, requestEditCourseFail, requestEditCourseSuccess, requestFilteredCourses, requestFilteredCoursesFail, requestFilteredCoursesSuccess, requestSingleCourse, requestSingleCourseFail, requestSingleCourseSuccess } from "./courses.actions";
 
 export const coursesFeatureKey: string = 'courses';
 
@@ -74,7 +74,7 @@ export const reducer = createReducer(
         errorMessage: action.errorMessage
     })),
     on(requestEditCourse, state => state),
-    on(requestEditCoruseSuccess, (state, action) => ({
+    on(requestEditCourseSuccess, (state, action) => ({
         ...state,
         allCourses: state.allCourses.map(course => course.id === action.course.id ? action.course : course)
     })),
@@ -91,6 +91,8 @@ export const reducer = createReducer(
         ...state,
         errorMessage: action.errorMessage
     }))
-)
+);
+
+export const coursesReducer = (state: CoursesState, action: Action) => reducer(state, action);
     
 

@@ -1,23 +1,24 @@
 import { Injectable } from "@angular/core";
-import { Store } from "@ngrx/store";
+import { select, Store } from "@ngrx/store";
 import { Course } from "src/app/services/course.model";
+import { State } from "..";
 import { requestAllCourses, requestCreateCourse, requestDeleteCourse, requestEditCourse, requestFilteredCourses, requestSingleCourse } from "./courses.actions";
-import { CoursesState } from "./courses.reducers";
-import { getAllCourses, getCourse, getErrorMessage, isAllCoursesLoadingSelector, isSearchingStateSelector, isSingleCourseLoadingSelector } from "./courses.selector";
+import { getAllCourses, getCourse, getCourses, getErrorMessage, isAllCoursesLoadingSelector, isSearchingStateSelector, isSingleCourseLoadingSelector } from "./courses.selector";
 
 @Injectable({
     providedIn:'root'
 })
 export class CoursesStateFacade {
     
-    public isAllCoursesLoading$ = this.store.select(isAllCoursesLoadingSelector);
-    public isSingleCourseLoading$ = this.store.select(isSingleCourseLoadingSelector);
-    public isSearchingState$ = this.store.select(isSearchingStateSelector);
-    public courses$ = this.store.select(getAllCourses);
-    public course$ = this.store.select(getCourse);
-    public errorMessage$ = this.store.select(getErrorMessage);
+    public isAllCoursesLoading$ = this.store.pipe(select(isAllCoursesLoadingSelector));
+    public isSingleCourseLoading$ = this.store.pipe(select(isSingleCourseLoadingSelector));
+    public isSearchingState$ = this.store.pipe(select(isSearchingStateSelector));
+    public courses$ = this.store.pipe(select(getCourses));
+    public allCourses$ = this.store.pipe(select(getAllCourses));
+    public course$ = this.store.pipe(select(getCourse));
+    public errorMessage$ = this.store.pipe(select(getErrorMessage));
 
-    constructor(private store: Store<CoursesState>) {}
+    constructor(private store: Store<State>) {}
 
     getAllCourses(): void {
         this.store.dispatch(requestAllCourses());

@@ -1,9 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { mergeMap, Subject, Subscription, take, takeUntil } from 'rxjs';
+import { requestLoginSuccess } from 'src/app/auth/store/auth.actions';
 import { Course } from 'src/app/services/course.model';
 import { CoursesStoreService } from 'src/app/services/courses-store.service';
+import { AuthorsStateFacade } from 'src/app/store/authors/authors.facade';
+import { CoursesStateFacade } from 'src/app/store/courses/courses.facade';
 import { UserStoreService } from 'src/app/user/services/user-store.service';
+import { UserStateFacade } from 'src/app/user/store/user.facade';
 
 @Component({
   selector: 'app-courses',
@@ -12,39 +16,44 @@ import { UserStoreService } from 'src/app/user/services/user-store.service';
 })
 export class CoursesComponent implements OnInit, OnDestroy {
 
-  courses: Course[];
+  allCourses: Course[];
+  filteredCourses: Course[];
   isUserAdmin: boolean;
-  isLoading: boolean = false;
+  isAllCoursesLoading: boolean = false;
+  isSearchingState: boolean = false;
 
-  coursesSubscription: Subscription;
-  isAdminSubscription: Subscription;
-  isLoadingSubscription: Subscription;
+  private destroyed$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(public coursesStoreService: CoursesStoreService,
-              private router: Router,
-              public userStoreService: UserStoreService) { }
+  constructor(private courseStateFacade: CoursesStateFacade,
+    private authorsStteFacade: AuthorsStateFacade,
+    private usersStateFacade: UserStateFacade,
+    private router: Router) { }
 
   ngOnInit(): void {
-    this.coursesStoreService.getAll();
-    this.userStoreService.getUser();
-    this.subsrcibeToCourses();
+    this.authorsStteFacade.getAuthors();
+    this.courseStateFacade.getAllCourses();
+    this.subscribeToCourses();
+    this.subscribeToFilteredCourses();
     this.subscribeToIsAdmin();
-    this.subscribeToIsLoading();
+    this.subscribeToIsAllCoursesLoading();
+    this.subscribeToIsSearchingState();
   }
 
   ngOnDestroy(): void {
-      this.coursesSubscription.unsubscribe();
-      this.isAdminSubscription.unsubscribe();
-      this.isLoadingSubscription.unsubscribe();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
-  serachCourses(title: string): void {
-    this.coursesStoreService.searchCourse(title);
+  searchCourse(title: string): void {
+    if (title) {
+      this.courseStateFacade.getFilteredCourses(title);
+    } else {
+      this.courseStateFacade.getAllCourses();
+    }
   }
 
   removeCourse(courseToRemove: Course): void {
-    this.courses = this.courses.filter(course => course !== courseToRemove);
-    this.coursesStoreService.deleteCourse(courseToRemove);
+    this.courseStateFacade.deleteCourse(courseToRemove);
   }
 
   redirectToEditCoursePage(courseToEdit: Course): void {
@@ -55,15 +64,22 @@ export class CoursesComponent implements OnInit, OnDestroy {
     this.router.navigate(['/', 'courses', courseToShow.id]);
   }
 
-  private subsrcibeToCourses(): void {
-    this.coursesSubscription = this.coursesStoreService.courses$.subscribe(course => this.courses = course);
+  private subscribeToCourses(): void {
+    this.courseStateFacade.allCourses$.pipe(takeUntil(this.destroyed$)).subscribe(allCourses => {this.allCourses = allCourses})}
+
+  private subscribeToFilteredCourses(): void {
+    this.courseStateFacade.courses$.pipe(takeUntil(this.destroyed$)).subscribe(filteredCourses => {this.allCourses = filteredCourses});
   }
 
   private subscribeToIsAdmin(): void {
-    this.isAdminSubscription = this.userStoreService.isAdmin$.subscribe(isAdmin => this.isUserAdmin = isAdmin);
+    this.usersStateFacade.isAdmin$.pipe(takeUntil(this.destroyed$)).subscribe(isAdmin => this.isUserAdmin = isAdmin);
   }
 
-  private subscribeToIsLoading(): void {
-    this.isLoadingSubscription = this.coursesStoreService.isLoading$.subscribe(isLoading => this.isLoading = isLoading);
+  private subscribeToIsAllCoursesLoading(): void {
+    this.courseStateFacade.isAllCoursesLoading$.pipe(takeUntil(this.destroyed$)).subscribe(isAllCoursesLoading => this.isAllCoursesLoading = isAllCoursesLoading)
+  }
+
+  private subscribeToIsSearchingState(): void {
+    this.courseStateFacade.isSearchingState$.pipe(takeUntil(this.destroyed$)).subscribe(isSearchingState => this.isSearchingState = isSearchingState);
   }
 }

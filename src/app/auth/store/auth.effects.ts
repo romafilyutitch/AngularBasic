@@ -1,30 +1,35 @@
-import { Actions, ofType } from "@ngrx/effects";
-import { catchError, map, merge, mergeMap, Observable, of, tap } from "rxjs";
+import { Injectable } from "@angular/core";
+import { Actions, createEffect, ofType } from "@ngrx/effects";
+import { catchError, first, map, merge, mergeMap, Observable, of, tap } from "rxjs";
 import { AuthService } from "../auth.service";
-import { requestLogin, requestLoginFail, requestLoginSuccess, requestLogout, requestRegister, requestRegisterFail, requestRegisterSuccess } from "./auth.actions";
+import { requestLogin, requestLoginFail, requestLoginSuccess, requestLogout, requestLogoutSuccess, requestRegister, requestRegisterFail, requestRegisterSuccess } from "./auth.actions";
 
+@Injectable({
+    providedIn: 'root'
+})
 export class AuthEffects {
 
-    public login$ = this.actions$.pipe(
+    public login$ = createEffect(() => this.actions$.pipe(
         ofType(requestLogin),
         mergeMap((user) => this.authService.login(user).pipe(
             map((response => requestLoginSuccess({token: response.result}))),
-            catchError((error) => of(requestLoginFail({errorMessage: error.errorMessage})))
+            catchError((errorResponse) => of(requestLoginFail({errorMessage: errorResponse.error.result})))
         ))
-    );
+    ));
 
-    public register = this.actions$.pipe(
+    public register$ = createEffect(() => this.actions$.pipe(
         ofType(requestRegister),
         mergeMap((user) => this.authService.register(user).pipe(
-            map(response => requestRegisterSuccess()),
-            catchError((error) => of(requestRegisterFail({errorMessage: error.errorMessage})))
+            map(() => requestRegisterSuccess()),
+            catchError((errorResponse) => of(requestRegisterFail({errorMessage: errorResponse.error.result})))
         ))
-    );
+    ));
 
-    public logout$ = this.actions$.pipe(
+    public logout$ = createEffect(() => this.actions$.pipe(
         ofType(requestLogout),
-        tap(() => this.authService.logout())
-    )
+        tap(() => this.authService.logout()),
+        map(() => requestLogoutSuccess())
+    ));
 
     constructor(private actions$: Actions, private authService: AuthService) {}
 }

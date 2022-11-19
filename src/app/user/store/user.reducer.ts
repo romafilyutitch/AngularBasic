@@ -16,6 +16,7 @@ export const reducer = createReducer(
     on(requestCurrentUser, state => state),
     on(requestCurrentUserFail, state => state),
     on(requestCurrentUserSuccess, (state, user) => ({
+        ...state,
         isAdmin: user.role === 'admin',
         name: user.name
     }))

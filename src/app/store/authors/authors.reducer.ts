@@ -31,4 +31,4 @@ export const reducer = createReducer(
     on(resetAddedAuthor, state => state)
 );
 
-export const AuhorsReducer = (state: AuthorsState, action: Action) => reducer(state, action);
+export const authorsReducer = (state: AuthorsState, action: Action) => reducer(state, action);

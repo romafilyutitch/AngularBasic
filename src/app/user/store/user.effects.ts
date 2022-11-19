@@ -3,7 +3,11 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {requestCurrentUser, requestCurrentUserFail, requestCurrentUserSuccess} from "./user.actions";
 import {mergeMap, map, catchError} from 'rxjs/operators';
 import {of} from 'rxjs';
+import { Injectable } from "@angular/core";
 
+@Injectable({
+    providedIn: 'root'
+})
 export class CurrentUserEffects {
 
     getCurrentUser$ = createEffect(() => this.actions$.pipe(

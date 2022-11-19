@@ -1,20 +1,19 @@
 import {Injectable} from "@angular/core";
-import {UserState} from "./user.reducer";
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import { requestCurrentUser } from "./user.actions";
 import { getName, isAdmin } from "./user.selectors";
 import { Observable } from "rxjs";
+import { State } from "src/app/store";
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserStateFacade {
     
-    public name$: Observable<string> = this.store.select(getName);
-    public isAdmin$: Observable<boolean> = this.store.select(isAdmin);
+    public name$: Observable<string> = this.store.pipe(select(getName));
+    public isAdmin$: Observable<boolean> = this.store.pipe(select(isAdmin));
 
-    constructor(private store: Store<UserState>) {}
-
+    constructor(private store: Store<State>) {}
 
     getCurrentUser(): void {
         this.store.dispatch(requestCurrentUser());

@@ -23,9 +23,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     AppRoutingModule,
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot(effects),
-    StoreDevtoolsModule.instrument({
-      name: 'Coruses App'
-    })
+    StoreDevtoolsModule.instrument()
   ],
   bootstrap: [AppComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}]

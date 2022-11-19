@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Store } from "@ngrx/store";
+import { select, Store } from "@ngrx/store";
 import { Observable } from "rxjs";
+import { State } from "..";
 import { Author } from "../../services/author.model";
 import { requestAddAuthor, requestAuthors } from "./authors.actions";
-import { AuthorsState } from "./authors.reducer";
 import { getAddedAuthor, getAuthors } from "./authors.selectors";
 
 @Injectable({
@@ -11,10 +11,10 @@ import { getAddedAuthor, getAuthors } from "./authors.selectors";
 })
 export class AuthorsStateFacade {
 
-    authors$: Observable<Author[]> = this.store.select(getAuthors);
-    addedAuthor$: Observable<Author> = this.store.select(getAddedAuthor);
+    authors$: Observable<Author[]> = this.store.pipe(select(getAuthors));
+    addedAuthor$: Observable<Author> = this.store.pipe(select(getAddedAuthor));
 
-    constructor(private store: Store<AuthorsState>) {}
+    constructor(private store: Store<State>) {}
 
     getAuthors(): void {
         this.store.dispatch(requestAuthors());
