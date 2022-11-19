@@ -16,8 +16,8 @@ export class AuthFacade {
     public getToken$: Observable<string> = this.store.pipe(select(getToken));
     public getLoginErrorMessage: Observable<string> = this.store.pipe(select(getSpecificErrorMessage))
     public getRegisterErrorMessage: Observable<string> = this.store.pipe(select(getSpecificErrorMessage))
-    
-    constructor(private store: Store<State>, private sessionStorageService: SessionStorageService) {}
+
+    constructor(private store: Store<State>, private sessionStorageService: SessionStorageService) { }
 
     login(body: User) {
         this.store.dispatch(requestLogin(body));
@@ -36,7 +36,7 @@ export class AuthFacade {
     }
 
     setAuthorization() {
-        this.store.dispatch(requestLoginSuccess({token: this.sessionStorageService.getToken()}));
+        this.store.dispatch(requestLoginSuccess({ token: this.sessionStorageService.getToken() }));
     }
 
 

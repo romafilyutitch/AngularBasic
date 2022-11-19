@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import {Author} from './../../services/author.model';
+import { Author } from './../../services/author.model';
 import { reqeustAuthorsSuccess, requestAddAuthor, requestAddAuthorFail, requestAddAuthorSuccess, requestAuthors, requestAuthorsFail, resetAddedAuthor } from './authors.actions';
 
 export const authorsFeatureKey: string = 'authors';
@@ -11,15 +11,15 @@ export interface AuthorsState {
 
 export const initialState: AuthorsState = {
     authors: [],
-    addedAuthor: {name: '', id :''} 
+    addedAuthor: { name: '', id: '' }
 };
 
 export const reducer = createReducer(
     initialState,
     on(requestAuthors, state => state),
     on(reqeustAuthorsSuccess, (state, action) => ({
-       ...state,
-       authors: action.authors
+        ...state,
+        authors: action.authors
     })),
     on(requestAuthorsFail, state => state),
     on(requestAddAuthor, state => state),

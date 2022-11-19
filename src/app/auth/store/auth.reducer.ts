@@ -1,5 +1,4 @@
-import { state } from '@angular/animations';
-import {Action, createReducer, on} from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 import { requestLogin, requestLoginFail, requestLoginSuccess, requestLogout, requestLogoutSuccess, requestRegister, requestRegisterFail, requestRegisterSuccess } from './auth.actions';
 
 export const authFeatureKey: string = 'auth'
@@ -17,7 +16,7 @@ export const initialState: AuthState = {
 };
 
 export const reducer = createReducer(
-    initialState, 
+    initialState,
     on(requestLogin, state => state),
     on(requestLoginSuccess, (state, action) => ({
         ...state,

@@ -1,12 +1,9 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { mergeMap, Subject, Subscription, take, takeUntil } from 'rxjs';
-import { requestLoginSuccess } from 'src/app/auth/store/auth.actions';
+import { Subject, takeUntil } from 'rxjs';
 import { Course } from 'src/app/services/course.model';
-import { CoursesStoreService } from 'src/app/services/courses-store.service';
 import { AuthorsStateFacade } from 'src/app/store/authors/authors.facade';
 import { CoursesStateFacade } from 'src/app/store/courses/courses.facade';
-import { UserStoreService } from 'src/app/user/services/user-store.service';
 import { UserStateFacade } from 'src/app/user/store/user.facade';
 
 @Component({
@@ -65,10 +62,11 @@ export class CoursesComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToCourses(): void {
-    this.courseStateFacade.allCourses$.pipe(takeUntil(this.destroyed$)).subscribe(allCourses => {this.allCourses = allCourses})}
+    this.courseStateFacade.allCourses$.pipe(takeUntil(this.destroyed$)).subscribe(allCourses => { this.allCourses = allCourses })
+  }
 
   private subscribeToFilteredCourses(): void {
-    this.courseStateFacade.courses$.pipe(takeUntil(this.destroyed$)).subscribe(filteredCourses => {this.allCourses = filteredCourses});
+    this.courseStateFacade.courses$.pipe(takeUntil(this.destroyed$)).subscribe(filteredCourses => { this.allCourses = filteredCourses });
   }
 
   private subscribeToIsAdmin(): void {

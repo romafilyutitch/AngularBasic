@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { SessionStorageService } from './session-storage.service';
 import { BehaviorSubject, first, Observable, tap } from 'rxjs';
-import { AuthResponse} from './auth.model';
+import { AuthResponse } from './auth.model';
 import { User } from '../user/user.model';
 
 @Injectable({
@@ -28,12 +28,12 @@ export class AuthService {
   }
 
   logout(): void {
-      this.httpClient.delete('http://localhost:4000/logout')
+    this.httpClient.delete('http://localhost:4000/logout')
       .pipe(first())
       .subscribe(() => {
         this.isAuthorized$$.next(false);
         this.sessionStorageService.deleteToken();
       });
   }
-  
+
 }

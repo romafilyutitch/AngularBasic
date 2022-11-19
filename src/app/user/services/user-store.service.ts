@@ -5,7 +5,7 @@ import { UserService } from './user.service';
 @Injectable({
   providedIn: 'root'
 })
-export class UserStoreService implements OnDestroy{
+export class UserStoreService implements OnDestroy {
 
   private name$$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private isAdmin$$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -16,14 +16,14 @@ export class UserStoreService implements OnDestroy{
   constructor(private userSerice: UserService) { }
 
   ngOnDestroy(): void {
-      this.name$$.complete();
-      this.isAdmin$$.complete();
+    this.name$$.complete();
+    this.isAdmin$$.complete();
   }
 
   getUser() {
     this.userSerice.getUser().subscribe(user => {
-          this.name$$.next(user.name);
-          this.isAdmin$$.next(user.role === 'admin');
+      this.name$$.next(user.name);
+      this.isAdmin$$.next(user.role === 'admin');
     })
   }
 }

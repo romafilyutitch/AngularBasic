@@ -19,7 +19,7 @@ export class CourseListComponent implements OnInit {
   selectedCourse: Course;
   editIcon: IconDefinition = faPencil;
   removeIcon: IconDefinition = faTrash;
-  
+
   constructor() { }
 
   ngOnInit(): void {

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, first, map, merge, mergeMap, Observable, of, tap } from "rxjs";
+import { catchError, map, mergeMap, of, tap } from "rxjs";
 import { AuthService } from "../auth.service";
 import { requestLogin, requestLoginFail, requestLoginSuccess, requestLogout, requestLogoutSuccess, requestRegister, requestRegisterFail, requestRegisterSuccess } from "./auth.actions";
 
@@ -12,8 +12,8 @@ export class AuthEffects {
     public login$ = createEffect(() => this.actions$.pipe(
         ofType(requestLogin),
         mergeMap((user) => this.authService.login(user).pipe(
-            map((response => requestLoginSuccess({token: response.result}))),
-            catchError((errorResponse) => of(requestLoginFail({errorMessage: errorResponse.error.result})))
+            map((response => requestLoginSuccess({ token: response.result }))),
+            catchError((errorResponse) => of(requestLoginFail({ errorMessage: errorResponse.error.result })))
         ))
     ));
 
@@ -21,7 +21,7 @@ export class AuthEffects {
         ofType(requestRegister),
         mergeMap((user) => this.authService.register(user).pipe(
             map(() => requestRegisterSuccess()),
-            catchError((errorResponse) => of(requestRegisterFail({errorMessage: errorResponse.error.result})))
+            catchError((errorResponse) => of(requestRegisterFail({ errorMessage: errorResponse.error.result })))
         ))
     ));
 
@@ -31,5 +31,5 @@ export class AuthEffects {
         map(() => requestLogoutSuccess())
     ));
 
-    constructor(private actions$: Actions, private authService: AuthService) {}
+    constructor(private actions$: Actions, private authService: AuthService) { }
 }

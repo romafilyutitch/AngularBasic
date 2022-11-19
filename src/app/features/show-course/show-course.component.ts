@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { first, map, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Course } from 'src/app/services/course.model';
-import { CoursesStoreService } from 'src/app/services/courses-store.service';
 import { CoursesStateFacade } from 'src/app/store/courses/courses.facade';
 
 @Component({
@@ -24,8 +23,8 @@ export class ShowCourseComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      this.destroyed$.next(true);
-      this.destroyed$.complete();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
   private subscribeToCourse(): void {

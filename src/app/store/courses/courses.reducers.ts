@@ -17,7 +17,7 @@ export interface CoursesState {
 export const initialState: CoursesState = {
     allCourses: [],
     courses: [],
-    course: {id: '', authors: [], description: '', duration: 0, title: '', creationDate: ''},
+    course: { id: '', authors: [], description: '', duration: 0, title: '', creationDate: '' },
     isAllCoursesLoading: false,
     isSingleCourseLoading: false,
     isSearchState: false,
@@ -28,7 +28,7 @@ export const reducer = createReducer(
     initialState,
     on(requestAllCourses, state => ({
         ...state,
-        isAllCoursesLoading : true
+        isAllCoursesLoading: true
     })),
     on(requestAllCoursesSuccess, (state, action) => ({
         ...state,
@@ -94,5 +94,5 @@ export const reducer = createReducer(
 );
 
 export const coursesReducer = (state: CoursesState, action: Action) => reducer(state, action);
-    
+
 

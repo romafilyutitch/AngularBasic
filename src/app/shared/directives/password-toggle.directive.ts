@@ -8,8 +8,8 @@ export class PasswordToggleDirective {
 
   showPassword: boolean = false;
 
-  constructor() { 
-    
+  constructor() {
+
   }
 
   togglePassword(): void {

@@ -14,7 +14,7 @@ export class AuthorsStateFacade {
     authors$: Observable<Author[]> = this.store.pipe(select(getAuthors));
     addedAuthor$: Observable<Author> = this.store.pipe(select(getAddedAuthor));
 
-    constructor(private store: Store<State>) {}
+    constructor(private store: Store<State>) { }
 
     getAuthors(): void {
         this.store.dispatch(requestAuthors());

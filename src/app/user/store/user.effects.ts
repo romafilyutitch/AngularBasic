@@ -1,8 +1,8 @@
-import {UserService} from "../services/user.service";
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {requestCurrentUser, requestCurrentUserFail, requestCurrentUserSuccess} from "./user.actions";
-import {mergeMap, map, catchError} from 'rxjs/operators';
-import {of} from 'rxjs';
+import { UserService } from "../services/user.service";
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { requestCurrentUser, requestCurrentUserFail, requestCurrentUserSuccess } from "./user.actions";
+import { mergeMap, map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { Injectable } from "@angular/core";
 
 @Injectable({
@@ -13,12 +13,12 @@ export class CurrentUserEffects {
     getCurrentUser$ = createEffect(() => this.actions$.pipe(
         ofType(requestCurrentUser),
         mergeMap(() => this.userService.getUser()
-        .pipe(
-            map(user => requestCurrentUserSuccess(user)),
-            catchError(() => of(requestCurrentUserFail()))
-        ))
+            .pipe(
+                map(user => requestCurrentUserSuccess(user)),
+                catchError(() => of(requestCurrentUserFail()))
+            ))
     ))
 
-    constructor(private actions$: Actions ,private userService: UserService) {}
+    constructor(private actions$: Actions, private userService: UserService) { }
 
 }

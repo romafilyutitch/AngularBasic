@@ -1,5 +1,5 @@
-import {createReducer, on, Action} from '@ngrx/store';
-import {requestCurrentUser, requestCurrentUserFail, requestCurrentUserSuccess } from './user.actions';
+import { createReducer, on, Action } from '@ngrx/store';
+import { requestCurrentUser, requestCurrentUserFail, requestCurrentUserSuccess } from './user.actions';
 
 export interface UserState {
     isAdmin: boolean;

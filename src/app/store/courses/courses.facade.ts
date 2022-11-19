@@ -6,10 +6,10 @@ import { requestAllCourses, requestCreateCourse, requestDeleteCourse, requestEdi
 import { getAllCourses, getCourse, getCourses, getErrorMessage, isAllCoursesLoadingSelector, isSearchingStateSelector, isSingleCourseLoadingSelector } from "./courses.selector";
 
 @Injectable({
-    providedIn:'root'
+    providedIn: 'root'
 })
 export class CoursesStateFacade {
-    
+
     public isAllCoursesLoading$ = this.store.pipe(select(isAllCoursesLoadingSelector));
     public isSingleCourseLoading$ = this.store.pipe(select(isSingleCourseLoadingSelector));
     public isSearchingState$ = this.store.pipe(select(isSearchingStateSelector));
@@ -18,29 +18,29 @@ export class CoursesStateFacade {
     public course$ = this.store.pipe(select(getCourse));
     public errorMessage$ = this.store.pipe(select(getErrorMessage));
 
-    constructor(private store: Store<State>) {}
+    constructor(private store: Store<State>) { }
 
     getAllCourses(): void {
         this.store.dispatch(requestAllCourses());
     }
 
     getSingleCourse(courseId: string) {
-        this.store.dispatch(requestSingleCourse({courseId}));
-    } 
+        this.store.dispatch(requestSingleCourse({ courseId }));
+    }
 
     getFilteredCourses(title: string) {
-        this.store.dispatch(requestFilteredCourses({title}))
+        this.store.dispatch(requestFilteredCourses({ title }))
     }
 
     editCourse(course: Course) {
-        this.store.dispatch(requestEditCourse({course}));
+        this.store.dispatch(requestEditCourse({ course }));
     }
 
     createCourse(course: Course) {
-        this.store.dispatch(requestCreateCourse({course}));
+        this.store.dispatch(requestCreateCourse({ course }));
     }
 
     deleteCourse(course: Course) {
-        this.store.dispatch(requestDeleteCourse({course}));
+        this.store.dispatch(requestDeleteCourse({ course }));
     }
 }

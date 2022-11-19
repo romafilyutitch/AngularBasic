@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { first, Subject, Subscription, takeUntil } from 'rxjs';
-import { AuthService } from 'src/app/auth/auth.service';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthFacade } from 'src/app/auth/store/auth.facade';
 import { UserStateFacade } from 'src/app/user/store/user.facade';
 import { User } from 'src/app/user/user.model';
@@ -35,7 +34,7 @@ export class LoginComponent implements OnInit {
     this.destroyed$.complete();
   }
 
-  processSubmitForm(form) : void {
+  processSubmitForm(form): void {
     this.formSubmitted = true;
     if (form.valid) {
       this.authFacade.login(this.user);
@@ -44,17 +43,17 @@ export class LoginComponent implements OnInit {
 
   private subscribeToIsAuthorized(): void {
     this.authFacade.isAuthorized$.pipe(takeUntil(this.destroyed$))
-    .subscribe(isAuthorized => {
-      if (isAuthorized) {
-        this.userStateFacade.getCurrentUser();
-        this.router.navigateByUrl('/courses');
-      }
-    });
+      .subscribe(isAuthorized => {
+        if (isAuthorized) {
+          this.userStateFacade.getCurrentUser();
+          this.router.navigateByUrl('/courses');
+        }
+      });
   }
 
   private subscribeToErrorMessage(): void {
     this.authFacade.getLoginErrorMessage.pipe(takeUntil(this.destroyed$))
-    .subscribe(messsage => this.errorMessage = messsage);
+      .subscribe(messsage => this.errorMessage = messsage);
   }
 
 }
