@@ -53,7 +53,11 @@ export class LoginComponent implements OnInit {
 
   private subscribeToErrorMessage(): void {
     this.authFacade.getLoginErrorMessage.pipe(takeUntil(this.destroyed$))
-      .subscribe(messsage => this.errorMessage = messsage);
+      .subscribe(messsage => {
+        if (this.formSubmitted) {
+          this.errorMessage = messsage
+        }
+      });
   }
 
 }
