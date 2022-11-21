@@ -9,11 +9,10 @@ export class CourseCardComponent implements OnInit {
   
   @Input() title: string;
   @Input() description: string;
-  @Input() creationgDate: Date ;
+  @Input() creationDate: string ;
   @Input() duration: number;
   @Input() authors: string[];
   @Input() isEditable: boolean; 
-
 
 
   constructor() { }

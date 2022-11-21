@@ -1,56 +1,69 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Course } from 'src/app/shared/components/course.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { Course } from 'src/app/services/course.model';
+import { CoursesStoreService } from 'src/app/services/courses-store.service';
+import { UserStoreService } from 'src/app/user/services/user-store.service';
 
 @Component({
   selector: 'app-courses',
   templateUrl: './courses.component.html',
   styleUrls: ['./courses.component.css']
 })
-export class CoursesComponent implements OnInit {
+export class CoursesComponent implements OnInit, OnDestroy {
 
-  courses: Course[] = [
-    {
-      title: 'Angular',
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuris, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheet containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
-      creationDate: new Date(Date.UTC(2012, 2, 20)),
-      duration: 150,
-      authors: ['Dave Heisenberg', 'Tony Ja']
-    },
-    {
-      title: 'Java',
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuris, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheet containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
-      creationDate: new Date(Date.UTC(2017, 7, 14)),
-      duration: 60,
-      authors: ['Dave Simonnds', 'Valentina Lary']
-    },
-    {
-      title: 'ASP. NET',
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuris, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheet containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
-      creationDate: new Date(Date.UTC(2022, 5, 1)),
-      duration: 210,
-      authors: ['Sam Smith', 'Tony Robbins']
-    }
-  ]
-  isEditable: boolean = true;
-  selectedCourse: Course;
-  modalOkButtonText: string = 'OK';
-  cancellButtonText: string = 'Cancell'
+  courses: Course[];
+  isUserAdmin: boolean;
+  isLoading: boolean = false;
 
-  constructor() { }
+  coursesSubscription: Subscription;
+  isAdminSubscription: Subscription;
+  isLoadingSubscription: Subscription;
+
+  constructor(public coursesStoreService: CoursesStoreService,
+              private router: Router,
+              public userStoreService: UserStoreService) { }
 
   ngOnInit(): void {
+    this.coursesStoreService.getAll();
+    this.userStoreService.getUser();
+    this.subsrcibeToCourses();
+    this.subscribeToIsAdmin();
+    this.subscribeToIsLoading();
   }
 
-  openModal($event: Course) {
-    this.selectedCourse = $event;
+  ngOnDestroy(): void {
+      this.coursesSubscription.unsubscribe();
+      this.isAdminSubscription.unsubscribe();
+      this.isLoadingSubscription.unsubscribe();
   }
 
-  handleModalResult($event: boolean) {
-    if ($event) {
-      console.log('Modal was closed with ok button');
-    } else {
-      console.log('Modal was closed with cancel button');
-    }
+  serachCourses(title: string): void {
+    this.coursesStoreService.searchCourse(title);
   }
 
+  removeCourse(courseToRemove: Course): void {
+    this.courses = this.courses.filter(course => course !== courseToRemove);
+    this.coursesStoreService.deleteCourse(courseToRemove);
+  }
+
+  redirectToEditCoursePage(courseToEdit: Course): void {
+    this.router.navigate(['/', 'courses', 'edit', courseToEdit.id]);
+  }
+
+  redirectToShowCoursePage(courseToShow: Course): void {
+    this.router.navigate(['/', 'courses', courseToShow.id]);
+  }
+
+  private subsrcibeToCourses(): void {
+    this.coursesSubscription = this.coursesStoreService.courses$.subscribe(course => this.courses = course);
+  }
+
+  private subscribeToIsAdmin(): void {
+    this.isAdminSubscription = this.userStoreService.isAdmin$.subscribe(isAdmin => this.isUserAdmin = isAdmin);
+  }
+
+  private subscribeToIsLoading(): void {
+    this.isLoadingSubscription = this.coursesStoreService.isLoading$.subscribe(isLoading => this.isLoading = isLoading);
+  }
 }

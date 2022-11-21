@@ -1,0 +1,49 @@
+<div class="container h-75">
+    <div class="row h-100 align-items-center justify-content-center">
+        <div class="col-10">
+            <div>
+                <div class="p-2">
+                    <h2>Course</h2>
+                </div>
+                <div class="border shadow p-5">
+                        <div class="row">
+                            <p class="col-12 fw-bold h4">Main info</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="title" class="form-label fw-bold">Title</label>
+                                {{selectedCourse.title}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="description" class="form-label fw-bold">Description</label>
+                                {{selectedCourse.description}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <span class="fw-bold">Authors list:</span>
+                                <span *ngFor="let author of selectedCourse.authors">
+                                    {{author}}
+                                </span>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <p class="col-12 fw-bold h4">Duration</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-2 align-self-center fw-bold">
+                                {{selectedCourse.duration | duration}}
+                            </div>
+                        </div>
+                        <div class="row justify-content-end pt-3">
+                            <button class="col-2 m-2 btn btn-primary" [routerLink]="['/', 'courses']">Cancel</button>
+                        </div>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+

@@ -2,13 +2,22 @@
     <app-course-card 
     [title]="course.title"
     [description]="course.description"
-    [creationgDate]="course.creationDate"
+    [creationDate]="course.creationDate"
     [duration]="course.duration"
     [authors]="course.authors"
     [isEditable]="isEditable"
     >
-    <app-button (click)="courseShownEvent.emit(course)" [buttonText]="courseButtonText"></app-button>
-    <app-button (click)="courseEditedEvent.emit(course)" *ngIf="isEditable" [icon]="removeIcon"></app-button>
-    <app-button (click)="courseRemovedEvent.emit(course)" *ngIf="isEditable" [icon]="editIcon"></app-button>
+    <app-button (click)="emitCourseShowEvent(course)" [buttonText]="'Show course'"></app-button>
+    <app-button (click)="selectCourseToRemove(course)" *ngIf="isEditable" [icon]="removeIcon" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></app-button>
+    <app-button (click)="emitCourseEditEvent(course)" *ngIf="isEditable" [icon]="editIcon"></app-button>
 </app-course-card>
 </div>
+
+<app-confirm-modal *ngIf="selectedCourse"
+    [title]="'Delete course confirmation ' + selectedCourse.title"
+    [message]="'Are you sure you want to remove course ' + selectedCourse.title"
+    [okButtonText]="'Remove course'"
+    [cancelButtonText]="'Cancel'"
+    (modalResultEvent)="emitRemoveCourseEvent($event)"
+>
+</app-confirm-modal>

@@ -5,11 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CreationDatePipe implements PipeTransform {
 
-  transform(date: Date): string {
-    const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-    const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-    const year = date.getFullYear();
-
+  transform(date: string): string {
+    const [day, month, year] = date.split('/');
     return `${day}.${month}.${year}`;
   }
 }

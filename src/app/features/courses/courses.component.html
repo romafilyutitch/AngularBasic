@@ -1,22 +1,31 @@
-<app-header>
-    <span class="mx-3">Harry potter</span>
-    <app-button [buttonText]="'Logout'"></app-button>
-</app-header>
 
-<app-search [searchPlaceholder]="'Input text'"></app-search>
+<app-search (searchInitiated)="serachCourses($event)" [searchPlaceholder]="'Input text'"></app-search>
 
-<app-course-list 
-    [isEditable]="isEditable"
+<div class="container">
+    <div class="row h-100 align-items-center justify-content-center">
+        <div class="col-6 m-2">
+            <div class="text-center">
+                <div *ngIf="isLoading" class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div *ngIf="!courses.length && !isLoading && isUserAdmin" class="p-2 mb-4">
+                    <h2>Your list is empty</h2>
+                </div>
+                <div *ngIf="!courses.length && !isLoading && isUserAdmin" class="p-2">
+                    Please use 'Add New Course' button to add your first course
+                </div>
+                <div *ngIf="isUserAdmin && !isLoading" class="p-2">
+                    <app-button [buttonText]="'Add new course'" [routerLink]="['/', 'course', 'add']"></app-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-course-list *ngIf="courses.length"
+    [isEditable]="isUserAdmin"
     [courses]="courses"
-    (courseShownEvent)="openModal($event)"
+    (courseRemoveEvent)="removeCourse($event)"
+    (courseEditEvent)="redirectToEditCoursePage($event)"
+    (courseShownEvent)="redirectToShowCoursePage($event)"
 ></app-course-list>
-
-<app-confirm-modal *ngIf="selectedCourse"
-    [title]="selectedCourse.title"
-    [message]="selectedCourse.description"
-    [okButtonText]="modalOkButtonText"
-    [cancelButtonText]="cancellButtonText"
-    (modalResultEvent)="handleModalResult($event)"
->
-</app-confirm-modal>
-
