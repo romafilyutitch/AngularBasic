@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Author } from './author.model';
 import { AuthorsService } from './authors.service';
 
@@ -17,8 +17,8 @@ export class AuthorsStoreService implements OnDestroy {
   constructor(private authorsService: AuthorsService) { }
 
   ngOnDestroy(): void {
-      this.isLoading$$.complete();
-      this.authors$$.complete();
+    this.isLoading$$.complete();
+    this.authors$$.complete();
   }
 
   getAll() {

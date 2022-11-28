@@ -9,11 +9,11 @@ import { CreationDatePipe } from './pipes/creation-date.pipe';
 import { DurationPipe } from './pipes/duration.pipe';
 
 const COMPONENTS = [
-  HeaderComponent, 
-  ButtonComponent, 
+  HeaderComponent,
+  ButtonComponent,
   InfoComponent,
   ConfirmModalComponent,
-  SearchComponent, 
+  SearchComponent,
 ]
 
 @NgModule({

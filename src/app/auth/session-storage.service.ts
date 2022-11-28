@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class SessionStorageService {
-  
+
   private tokenItemKey: string = 'token';
 
   constructor(@Inject('Window') private window: Window) { }

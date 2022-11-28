@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { first, Subscription } from 'rxjs';
-import { AuthService } from 'src/app/auth/auth.service';
+import { Subject, takeUntil } from 'rxjs';
+import { AuthFacade } from 'src/app/auth/store/auth.facade';
+import { UserStateFacade } from 'src/app/user/store/user.facade';
 import { User } from 'src/app/user/user.model';
 
 @Component({
@@ -9,7 +10,7 @@ import { User } from 'src/app/user/user.model';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
 
   user: User = {
     email: '',
@@ -17,35 +18,46 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   formSubmitted: boolean = false;
-  wrongData: boolean = false;
-  isAuthorizedSubscription: Subscription;
+  errorMessage: string;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  destroyed$: Subject<boolean> = new Subject<boolean>();
+
+  constructor(private authFacade: AuthFacade, private userStateFacade: UserStateFacade, private router: Router) { }
 
   ngOnInit(): void {
     this.subscribeToIsAuthorized();
+    this.subscribeToErrorMessage();
   }
 
   ngOnDestroy(): void {
-    this.isAuthorizedSubscription.unsubscribe();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
-  processSubmitForm(form) : void {
+  processSubmitForm(form): void {
     this.formSubmitted = true;
     if (form.valid) {
-      this.authService.login(this.user);
+      this.authFacade.login(this.user);
     }
   }
 
   private subscribeToIsAuthorized(): void {
-    this.isAuthorizedSubscription = this.authService.isAuthorized$
-    .subscribe(isAuthorized => {
-      if (isAuthorized) {
-        this.router.navigateByUrl('/courses');
-      } else if (!isAuthorized && this.formSubmitted) {
-        this.wrongData = true;
-      }
-    });
+    this.authFacade.isAuthorized$.pipe(takeUntil(this.destroyed$))
+      .subscribe(isAuthorized => {
+        if (isAuthorized) {
+          this.userStateFacade.getCurrentUser();
+          this.router.navigateByUrl('/courses');
+        }
+      });
+  }
+
+  private subscribeToErrorMessage(): void {
+    this.authFacade.getLoginErrorMessage.pipe(takeUntil(this.destroyed$))
+      .subscribe(messsage => {
+        if (this.formSubmitted) {
+          this.errorMessage = messsage
+        }
+      });
   }
 
 }

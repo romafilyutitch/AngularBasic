@@ -1,11 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { first, Subscription } from 'rxjs';
-import { Author } from 'src/app/services/author.model';
-import { AuthorsStoreService } from 'src/app/services/authors-store.service';
+import { Subject, takeUntil } from 'rxjs';
 import { Course } from 'src/app/services/course.model';
-import { CoursesStoreService } from 'src/app/services/courses-store.service';
+import { AuthorsStateFacade } from 'src/app/store/authors/authors.facade';
+import { CoursesStateFacade } from 'src/app/store/courses/courses.facade';
 @Component({
   selector: 'app-course',
   templateUrl: './course.component.html',
@@ -17,27 +16,42 @@ export class CourseComponent implements OnInit, OnDestroy {
   formSubmitted: boolean;
   courseToEdit: Course;
   isLoading: boolean = false;
-  
-  isLoadingSubscription: Subscription;
+
+  private destroyed$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private formBuilder: FormBuilder,
-              private coursesStorageSerivce: CoursesStoreService, 
-              private authorsStorageService: AuthorsStoreService,
-              private router: Router,
-              public activatedRoute: ActivatedRoute) { }
+    private coursesStateFacade: CoursesStateFacade,
+    private authorsStateFacade: AuthorsStateFacade,
+    private router: Router,
+    public activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.authorsStorageService.getAll();
+    this.authorsStateFacade.getAuthors();
     this.buildForm();
-    if(this.shouldFormEditCourse()) {
+    if (this.shouldFormEditCourse()) {
       this.subscribeToCourseToEdit();
-      this.updateFormToEditCourse(this.courseToEdit);
+      const courseToEditId: string = this.activatedRoute.snapshot.paramMap.get('id');
+      this.coursesStateFacade.getSingleCourse(courseToEditId);
     }
     this.subscribeToIsLoading();
   }
 
   ngOnDestroy(): void {
-      this.isLoadingSubscription.unsubscribe();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
+  processSubmit(): void {
+    this.formSubmitted = true;
+    if (this.courseForm.valid) {
+      const requestBody: Course = this.buildRequestBody();
+      if (this.shouldFormEditCourse()) {
+        this.coursesStateFacade.editCourse(requestBody);
+      } else {
+        this.coursesStateFacade.createCourse(requestBody);
+      }
+      this.router.navigateByUrl('/courses');
+    }
   }
 
   get title() {
@@ -64,24 +78,11 @@ export class CourseComponent implements OnInit, OnDestroy {
     return this.courseForm.get('newAuthor').get('authors') as FormArray;
   }
 
-  processSubmit(): void {
-    this.formSubmitted = true;
-    if (this.courseForm.valid) {
-        const requestBody: Course = this.buildRequestBody();
-        if(this.shouldFormEditCourse()) {
-          this.coursesStorageSerivce.editCourse(requestBody);
-        } else {
-          this.coursesStorageSerivce.createCourse(requestBody);
-        }
-        this.router.navigateByUrl('/courses');
-    }
-  }
-
   createAuthor(): void {
-    const authorNameControl : FormControl = this.courseForm.get('newAuthor').get('authorName') as FormControl;
+    const authorNameControl: FormControl = this.courseForm.get('newAuthor').get('authorName') as FormControl;
     const authorName: string = authorNameControl.value;
     if (authorName && authorNameControl.valid) {
-      const newAuthorsFormArray : FormArray =  this.courseForm.get('newAuthor').get('authors') as FormArray;
+      const newAuthorsFormArray: FormArray = this.courseForm.get('newAuthor').get('authors') as FormArray;
       newAuthorsFormArray.push(this.formBuilder.control(
         authorName, []
       ));
@@ -94,20 +95,16 @@ export class CourseComponent implements OnInit, OnDestroy {
     newAuthorsFormArray.removeAt(removeIndex);
   }
 
+
+
   private subscribeToIsLoading(): void {
-    this.isLoadingSubscription = this.coursesStorageSerivce.isLoading$.subscribe(isLoading => {
-      this.isLoading = isLoading;
-    });
+    this.coursesStateFacade.isSingleCourseLoading$.pipe(takeUntil(this.destroyed$)).subscribe(isLoading => this.isLoading = isLoading);
   }
 
-
   private subscribeToCourseToEdit(): void {
-    const courseToEditId: string = this.activatedRoute.snapshot.paramMap.get('id');
-    this.coursesStorageSerivce.getCourse(courseToEditId);
-    this.coursesStorageSerivce.courses$
-    .pipe(first())
-    .subscribe(courses => {
-      this.courseToEdit = courses.find(course => course.id === courseToEditId);
+    this.coursesStateFacade.course$.pipe(takeUntil(this.destroyed$)).subscribe(courseToEdit => {
+      this.courseToEdit = courseToEdit;
+      this.updateFormToEditCourse(this.courseToEdit);
     });
   }
 
@@ -115,10 +112,6 @@ export class CourseComponent implements OnInit, OnDestroy {
     this.courseForm.get('title').patchValue(course.title);
     this.courseForm.get('description').patchValue(course.description);
     this.courseForm.get('duration').patchValue(course.duration);
-    const authorsArrayForm: FormArray = this.courseForm.get('newAuthor').get('authors') as FormArray;
-    course.authors.forEach(authorName => {
-      authorsArrayForm.push(this.formBuilder.control(authorName, []));
-    });
   }
 
   private shouldFormEditCourse(): boolean {
@@ -148,5 +141,5 @@ export class CourseComponent implements OnInit, OnDestroy {
       duration: this.courseForm.get('duration').value
     };
     return requestBody;
-  } 
+  }
 }

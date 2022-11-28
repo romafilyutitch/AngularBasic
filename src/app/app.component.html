@@ -1,6 +1,6 @@
 <div class="sticky-top">
     <app-header>
-        <span *ngIf="isUserAuthorized" class="mx-3">{{userStoreService.name$ | async}}</span>
+        <span *ngIf="isUserAuthorized" class="mx-3">{{userName}}</span>
         <app-button *ngIf="isUserAuthorized" (click)="processLogout()" [buttonText]="'Logout'"></app-button>
     </app-header>
 </div>

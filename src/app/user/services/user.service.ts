@@ -13,9 +13,9 @@ export class UserService {
 
   getUser(): Observable<User> {
     return this.httpClient.get<UserResponse>('http://localhost:4000/users/me')
-    .pipe(
-      first(),
-      map(response => response.result)
+      .pipe(
+        first(),
+        map(response => response.result)
       );
   }
 }

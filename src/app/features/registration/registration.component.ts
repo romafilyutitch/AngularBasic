@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/auth/auth.service';
+import { Subject, takeUntil } from 'rxjs';
+import { AuthFacade } from 'src/app/auth/store/auth.facade';
 import { createEmailValidator } from 'src/app/shared/utils/emailValidator';
 
 @Component({
@@ -15,17 +16,21 @@ export class RegistrationComponent implements OnInit {
   formSubmitted: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
-             private authService: AuthService,
-             private router: Router ) {
-
+    private authFacade: AuthFacade,
+    private router: Router) {
   }
 
+  errorMessage: string;
+  destroyed$: Subject<boolean> = new Subject<boolean>();
+
   ngOnInit(): void {
-    this.registrationForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(6)]],
-      email: ['', [Validators.required, createEmailValidator()]],
-      password: ['', [Validators.required, Validators.minLength(5)]]
-    }); 
+    this.boildForm();
+    this.subscribeToErroMessage();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
   get name() {
@@ -42,10 +47,23 @@ export class RegistrationComponent implements OnInit {
 
   processSubmit(): void {
     this.formSubmitted = true;
-    if(this.registrationForm.valid) {
-      this.authService.register(this.registrationForm.value);
+    if (this.registrationForm.valid) {
+      this.authFacade.register(this.registrationForm.value);
       this.router.navigateByUrl('/login');
     }
+  }
+
+  private subscribeToErroMessage(): void {
+    this.authFacade.getRegisterErrorMessage.pipe(takeUntil(this.destroyed$))
+      .subscribe(message => this.errorMessage = message);
+  }
+
+  private boildForm(): void {
+    this.registrationForm = this.formBuilder.group({
+      name: ['', [Validators.required, Validators.minLength(6)]],
+      email: ['', [Validators.required, createEmailValidator()]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
   }
 
 }

@@ -56,12 +56,12 @@
                             placeholder="Input text">
                             <div *ngIf="password.invalid && (formSubmitted || password.touched)" class="invalid-feedback">
                                 <div *ngIf="password.errors?.['required']">Password is required</div>
-                                <div *ngIf="password.errors?.['minlength']">Password should not be less than 5 symbols</div>
+                                <div *ngIf="password.errors?.['minlength']">Password should not be less than 6 symbols</div>
                             </div>
                             <div *ngIf="password.valid && (formSubmitted || password.touched)" class="valid-feedback">Looks good</div>
                         </div>
                         <div class="col-6 m-2 text-center row">
-                            <input type="submit" class="btn btn-primary" value="Login">
+                            <input type="submit" class="btn btn-primary" value="Register">
                         </div>
                         <div class="col-10 p-2 m-2 text-center">
                             If you have an account you may <a [routerLink]="['/', 'login']" class="text-decoration-none fw-bold text-dark">Login</a>
